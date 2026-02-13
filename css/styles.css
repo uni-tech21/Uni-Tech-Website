@@ -30,6 +30,8 @@ img{max-width:100%;display:block;}
 header{
   background: linear-gradient(120deg, var(--primary), var(--primary-2));
   color:#fff;
+    padding-top: 1px;   /* prevents margin-collapsing into body */
+  margin-top: -1px;   /* cancels the visual change */
 }
 .header-inner{
   padding: 20px 0;
@@ -186,3 +188,77 @@ header .badge{
   color:#fff;
   border: 1px solid rgba(255,255,255,.22);
 }
+/* ===== Global background image (subtle + stays as you scroll) ===== */
+body{
+  position: relative;
+  background: #ffffff; /* keep your base */
+}
+
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+
+  /* Background image + gentle fade */
+  background:
+    radial-gradient(circle at top, rgba(10,87,163,.10), rgba(255,255,255,.95) 55%),
+    url("/assets/images/bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+  /* This is what makes it not overwhelming */
+  opacity: 0.14;
+  filter: blur(0px) saturate(0.9);
+}
+
+/* Make content readable on top */
+header, main, footer{
+  position: relative;
+}
+/* ===== Homepage hero banner image ===== */
+/* ===== Homepage/Pages hero banner image (per-page) ===== */
+.hero-banner{
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-banner::before{
+  content:"";
+  position:absolute;
+  inset:0;
+
+  /* Use the per-page hero image variable */
+  background-image:
+    linear-gradient(120deg, rgba(10,87,163,.72), rgba(8,61,117,.62)),
+    var(--hero-image, url("/assets/images/hero-home.jpg"));
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.hero-banner .container{
+  position: relative;
+  z-index: 1;
+}
+
+/* Keep hero text readable on top of photos */
+.hero-banner h1,
+.hero-banner p,
+.hero-banner .hero-list,
+.hero-banner .hero-card h3{
+  color: #fff;
+}
+.hero-banner p{ opacity: .92; }
+
+.hero-banner .hero-card{
+  background: rgba(255,255,255,.14);
+  border: 1px solid rgba(255,255,255,.26);
+  backdrop-filter: blur(10px);
+}
+
+
