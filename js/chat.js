@@ -102,6 +102,15 @@ function startOverChat() {
   const formEl = panel.querySelector("#chat-form");
   const textEl = panel.querySelector("#chat-text");
   const resetBtn = panel.querySelector("#chatReset");
+  const isTouchDevice = () =>
+  window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+
+  // On mobile, don’t pop the keyboard until the user taps the chat area
+bodyEl.addEventListener("click", () => {
+  textEl.focus();
+});
+
+
 resetBtn.addEventListener("click", (e) => {
   e.preventDefault();
   startOverChat();
@@ -140,12 +149,31 @@ resetBtn.addEventListener("click", (e) => {
       quickEl.appendChild(b);
     });
   };
+  const ensureQuickReplies = () => {
+  // If we are collecting details (handoff flow), we intentionally show no chips
+  if (botState?.mode === "handoff") return;
+
+  // If there are no chips currently, restore defaults
+  if (!quickEl.children.length) {
+    setQuickReplies(DEFAULT_QUICK_REPLIES);
+  }
+};
+
 
   const open = () => {
-    panel.classList.add("open");
+  panel.classList.add("open");
+
+  // Don’t auto-open keyboard on phones
+  if (!isTouchDevice()) {
     textEl.focus();
-    scrollToBottom();
-  };
+  } else {
+    // optional: focus the close button instead (no keyboard)
+    closeBtn.focus();
+  }
+
+  scrollToBottom();
+};
+
 
   const close = () => {
     panel.classList.remove("open");
@@ -273,24 +301,14 @@ resetBtn.addEventListener("click", (e) => {
 ];
 
   const defaultGreeting = () => {
-    addMsg("bot",
-      "Hi! I’m the Uni-Tech helper bot.\n\nWhat can I help with today?",
-      "Tip: You can type normally, or tap a quick option below."
-    );
-    setQuickReplies([
-  "My laptop/PC is slow",
-  "It won’t turn on / black screen",
-  "Virus / pop-ups",
-  "Crashing / blue screen",
-  "Wi-Fi / internet issues",
-  "Upgrades (SSD/RAM) / new setup",
-  "Tutoring / computer lessons",
-  "Business IT support",
-  "Website help",
-  "Send my enquiry to Uni-Tech"
-]);
+  addMsg(
+    "bot",
+    "Hi! I’m the Uni-Tech helper bot.\n\nWhat can I help with today?",
+    "Tip: You can type normally, or tap a quick option below."
+  );
+  setQuickReplies(DEFAULT_QUICK_REPLIES);
+};
 
-  };
 
   const matchFAQ = (text) => {
     const t = text.toLowerCase();
@@ -487,6 +505,8 @@ resetBtn.addEventListener("click", (e) => {
   };
 
   renderTranscript();
+  ensureQuickReplies();
+
 
   // If empty transcript, greet
   if (!transcript.length) defaultGreeting();
