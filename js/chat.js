@@ -346,7 +346,7 @@ resetBtn.addEventListener("click", (e) => {
 
     // Lightweight fallback
     addMsg("bot",
-      "Got it. I'll forward this information onto Uni-Tech if you like?"
+      "Got it. I'll forward this information onto Uni-Tech to arrange a booking if you like?"
     );
     setQuickReplies(["Send my enquiry to Uni-Tech"]);
     botState.lastUser = cleaned;
