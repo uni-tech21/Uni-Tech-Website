@@ -77,7 +77,7 @@ function startOverChat() {
     <div class="chat-header">
       <div>
         <strong>Uni-Tech Chat</strong>
-        <small>Not monitored live — we’ll reply by email.</small>
+        <small>Not monitored live - we’ll reply by email.</small>
       </div>
       <button class="chat-reset" id="chatReset" type="button" title="Start over">↻</button>
       <button class="chat-close" type="button" aria-label="Close chat">✕</button>
@@ -346,9 +346,9 @@ resetBtn.addEventListener("click", (e) => {
 
     // Lightweight fallback
     addMsg("bot",
-      "Got it. I can either try a quick suggestion, or I can send this straight to Uni-Tech so you get a proper reply.\n\nWhat would you prefer?"
+      "Got it. I'll forward this information onto Uni-Tech if you like?"
     );
-    setQuickReplies(["Try a quick suggestion", "Send my enquiry to Uni-Tech"]);
+    setQuickReplies(["Send my enquiry to Uni-Tech"]);
     botState.lastUser = cleaned;
     saveState(botState);
   };
