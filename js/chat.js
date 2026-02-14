@@ -210,10 +210,16 @@ resetBtn.addEventListener("click", (e) => {
 
   // Slow computer
   {
-    keys: ["slow", "lag", "freezing", "takes ages", "spinning", "hangs", "performance"],
-    reply:
-      "If your computer is slow/freezing, common causes are:\n• Low storage space / failing drive\n• Too many startup apps\n• Updates running in the background\n• Malware\n• Old HDD (SSD upgrade helps massively)\n\nQuick question: is it mainly slow on startup, or slow all the time?\n\nIf you want, I can send your details to Uni-Tech for a proper diagnosis/quote."
-  },
+  keys: ["slow", "lag", "freezing", "takes ages", "spinning", "hangs", "performance"],
+  handler: () => {
+    addMsg("bot",
+      "If your computer is slow/freezing, common causes are:\n• Low storage space / failing drive\n• Too many startup apps\n• Updates running in the background\n• Malware\n• Old HDD (SSD upgrade helps massively)"
+    );
+
+    askFollowup("slow", "Quick question: is it mainly slow on startup, or slow all the time?");
+  }
+},
+
 
   // Won't turn on / no display
   {
@@ -311,12 +317,13 @@ resetBtn.addEventListener("click", (e) => {
 
 
   const matchFAQ = (text) => {
-    const t = text.toLowerCase();
-    for (const item of FAQ) {
-      if (item.keys.some(k => t.includes(k))) return item.reply;
-    }
-    return null;
-  };
+  const t = text.toLowerCase();
+  for (const item of FAQ) {
+    if (item.keys.some(k => t.includes(k))) return item;
+  }
+  return null;
+};
+
 
   const handleUser = async (text) => {
     const cleaned = text.trim();
@@ -324,33 +331,106 @@ resetBtn.addEventListener("click", (e) => {
 
     addMsg("user", cleaned);
 
-    // If user requests handoff
-    if (/send.*enquiry|send.*query|contact you|email you|human|speak to someone|book/i.test(cleaned)) {
+// If we JUST offered to forward to Uni-Tech, treat yes/ok/etc as confirmation
+if (botState?.awaitingHandoffConfirm) {
+  const at = botState.awaitingHandoffConfirmAt || 0;
+  const stillFresh = at && (Date.now() - at) < 5 * 60 * 1000; // 5 mins
+
+  // If it's stale, clear it so random "ok" later doesn't trigger
+  if (!stillFresh) {
+    botState.awaitingHandoffConfirm = false;
+    botState.awaitingHandoffConfirmAt = 0;
+    saveState(botState);
+  } else {
+    if (isAffirmative(cleaned)) {
+      botState.awaitingHandoffConfirm = false;
+      botState.awaitingHandoffConfirmAt = 0;
+      saveState(botState);
+
       await startHandoff();
       return;
     }
 
-    // If we’re currently collecting handoff details
-    if (botState.mode === "handoff") {
-      await continueHandoff(cleaned);
-      return;
-    }
+    if (isNegative(cleaned)) {
+      botState.awaitingHandoffConfirm = false;
+      botState.awaitingHandoffConfirmAt = 0;
+      saveState(botState);
 
-    // FAQ match
-    const reply = matchFAQ(cleaned);
-    if (reply) {
-      addMsg("bot", reply);
-      setQuickReplies(["Send my enquiry to Uni-Tech", "Anything else"]);
+      addMsg("bot", "No worries — what can I help with instead?");
+      setQuickReplies(DEFAULT_QUICK_REPLIES);
       return;
     }
+    // otherwise: fall through and treat it as a normal message
+  }
+}
+
+// If user requests handoff (explicit phrases)
+if (/(send.*enquiry|send.*query|send it|send this|forward it|forward this|contact you|email you|human|speak to someone|book)/i.test(cleaned)) {
+  // Clear any pending confirm flag
+  botState.awaitingHandoffConfirm = false;
+  botState.awaitingHandoffConfirmAt = 0;
+  saveState(botState);
+
+  await startHandoff();
+  return;
+}
+
+
+    // If we’re currently collecting handoff details
+// If we’re currently collecting handoff details
+if (botState.mode === "handoff") {
+  await continueHandoff(cleaned);
+  return;
+}
+
+// ✅ NEW: if we asked a follow-up question, treat this as the answer (no FAQ re-match)
+if (botState.followup) {
+  const kind = botState.followup;
+  botState.followup = null;
+  botState.followupAt = 0;
+  saveState(botState);
+
+  // Store the answer so you can include it in the Formspree transcript/message later if you want
+  botState.lastFollowup = { kind, answer: cleaned, ts: Date.now() };
+  saveState(botState);
+
+  addMsg("bot", "Got it — want me to send this to Uni-Tech so they can help you properly?");
+  setQuickReplies(["Send my enquiry to Uni-Tech"]);
+  botState.awaitingHandoffConfirm = true;
+  botState.awaitingHandoffConfirmAt = Date.now();
+  saveState(botState);
+  return;
+}
+
+// FAQ match
+// FAQ match
+const hit = matchFAQ(cleaned);
+if (hit) {
+  if (typeof hit.handler === "function") {
+    hit.handler(cleaned); // e.g. ask a follow-up + set botState.followup
+  } else {
+    addMsg("bot", hit.reply);
+    setQuickReplies(["Send my enquiry to Uni-Tech", "Anything else"]);
+  }
+  return;
+}
+
+
 
     // Lightweight fallback
     addMsg("bot",
-      "Got it. I'll forward this information onto Uni-Tech to arrange a booking if you like?"
-    );
-    setQuickReplies(["Send my enquiry to Uni-Tech"]);
-    botState.lastUser = cleaned;
-    saveState(botState);
+  "Got it. I'll forward this information onto Uni-Tech to arrange a booking if you like?"
+);
+setQuickReplies(["Send my enquiry to Uni-Tech"]);
+
+botState.lastUser = cleaned;
+
+// NEW: we are now waiting for a yes/no style confirmation
+botState.awaitingHandoffConfirm = true;
+botState.awaitingHandoffConfirmAt = Date.now();
+
+saveState(botState);
+
   };
 
   formEl.addEventListener("submit", (e) => {
@@ -484,6 +564,32 @@ resetBtn.addEventListener("click", (e) => {
   function isValidEmail(s) {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s.trim());
   }
+  function _normIntent(s) {
+  return (s || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[.!?]+$/g, ""); // drop trailing punctuation
+}
+
+function askFollowup(kind, question) {
+  botState.followup = kind;          // e.g. "slow", "wifi", "bsod"
+  botState.followupAt = Date.now();  // optional TTL
+  saveState(botState);
+
+  addMsg("bot", question);
+  // Don’t force chips here; up to you
+}
+
+function isAffirmative(s) {
+  const t = _normIntent(s);
+  // Accept "ok", "okay", "yes", "yeah", etc — even if more words follow
+  return /^(y|yes|yeah|yep|yea|ok|okay|sure|alright|all right|please|go ahead|sounds good)\b/.test(t);
+}
+
+function isNegative(s) {
+  const t = _normIntent(s);
+  return /^(n|no|nope|nah|not now|dont|don't|do not|later)\b/.test(t);
+}
 
   function escapeHtml(str) {
     return str.replace(/[&<>"']/g, (m) => ({
