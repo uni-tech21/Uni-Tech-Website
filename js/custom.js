@@ -112,7 +112,7 @@ var customScripts = {
 			
 			
 		},
-		fitText: function(){
+	fitText: function(){
     if (window.innerWidth > 767) {
         setTimeout(function() {
             $('h1.responsive-headline').fitText(1.2, {
