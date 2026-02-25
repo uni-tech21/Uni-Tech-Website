@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en-gb">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thank You | Uni-Tech</title>
+  <meta name="description" content="Thank you for contacting Uni-Tech.">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.78)),
+        url("images/banner-bg.jpg") center center / cover no-repeat fixed;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .thank-you-card {
+      width: 100%;
+      max-width: 760px;
+      background: rgba(10, 10, 10, 0.82);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 48px 36px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    .brand {
+      display: inline-block;
+      margin-bottom: 20px;
+      font-size: 44px;
+      font-weight: 700;
+      font-style: italic;
+      color: #ffffff;
+      text-decoration: none;
+      line-height: 1;
+    }
+
+    h1 {
+      margin: 0 0 16px;
+      font-size: 48px;
+      line-height: 1.1;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0 auto 14px;
+      max-width: 580px;
+      font-size: 20px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .small-text {
+      margin-top: 8px;
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .button-row {
+      margin-top: 30px;
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      min-width: 190px;
+      padding: 14px 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 600;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      background: #1565a9;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      background: #0f4f86;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: #ffffff;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    @media (max-width: 767px) {
+      .thank-you-card {
+        padding: 36px 22px;
+      }
+
+      .brand {
+        font-size: 34px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      p {
+        font-size: 18px;
+      }
+
+      .btn {
+        width: 100%;
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="thank-you-card">
+    <a href="index.html" class="brand">Uni-Tech</a>
+
+    <h1>Thank you</h1>
+
+    <p>Your message has been sent successfully.</p>
+    <p>We will get back to you as soon as possible.</p>
+
+    <div class="button-row">
+      <a href="index.html" class="btn btn-primary">Back to Home</a>
+      <a href="index.html#contactUs" class="btn btn-secondary">Send Another Message</a>
+    </div>
+
+    <p class="small-text">If your enquiry is urgent, you can also email enquires@uni-tech.co.uk</p>
+  </div>
+
+</body>
+</html>
