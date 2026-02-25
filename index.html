@@ -494,5 +494,22 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 </script>
+<script>
+$(function () {
+  $('#nav-toggle').on('click touchstart', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    $('#main-nav').collapse('toggle');
+  });
+
+  $('#main-nav').on('click touchstart', function (e) {
+    e.stopPropagation();
+  });
+
+  $(document).on('click touchstart', function () {
+    $('#main-nav').collapse('hide');
+  });
+});
+</script>
 </body>
 </html>
