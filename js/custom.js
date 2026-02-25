@@ -137,7 +137,12 @@ var customScripts = {
         customScripts.bannerHeight();
     }
 }
-$('document').ready(function () {
+$$('document').ready(function () {
     customScripts.init();
-	$('.features-left, .features-right, .design, .serviceBox, .owl-wrapper-outer, #portfolio').css('opacity','0');
+
+    if (window.innerWidth < 768) {
+        $('.features-left, .features-right, .design, .serviceBox, .owl-wrapper-outer, #portfolio').css('opacity', '1');
+    } else {
+        $('.features-left, .features-right, .design, .serviceBox, .owl-wrapper-outer, #portfolio').css('opacity', '0');
+    }
 });
