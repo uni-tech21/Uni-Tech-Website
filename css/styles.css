@@ -1305,274 +1305,299 @@ nav#filter li {
   flex-grow: 1;
 }
 
-/* Mobile: stack normally */
+/* =========================
+   CLEAN MOBILE OVERRIDES
+   Paste at the very end
+   ========================= */
+@media (max-width: 767px) {
 
-@media (max-width: 767px){
-
-  /* taller hero image area */
-  #home .banner-container{
-    min-height: 320px !important;
-    position: relative;
-    overflow: hidden;
+  html, body {
+    overflow-x: hidden;
   }
 
-  #home .banner-container > img{
-    width: 100% !important;
-    height: 320px !important;
-    object-fit: cover !important;
-    object-position: center top !important;
+  body {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* Header / nav */
+  .header {
+    background: rgba(0, 0, 0, 0.92) !important;
+  }
+
+  .navbar {
+    min-height: 64px;
+  }
+
+  .navbar-header {
+    float: none;
+  }
+
+  .navbar-toggle {
     display: block;
+    margin-top: 14px;
+    margin-right: 15px;
+    border: none;
   }
 
-  /* keep all hero content inside the taller image */
-  #home .banner-content{
-    min-height: 320px !important;
-    height: 320px !important;
-    padding: 18px 14px 18px !important;
-    display: flex !important;
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
-    text-align: center !important;
+  .navbar-brand {
+    display: block !important;
+    float: left;
+    font-size: 1.4em;
+    margin: 8px 0 0 10px;
   }
 
-  #home .hero-text{
-    width: 100% !important;
-    margin: 0 auto !important;
+  .navbar-brand.logo {
+    font-size: 1.4em !important;
   }
 
-  /* smaller logo so it fits neatly at the top */
-  #home .hero-text .logo{
-    display: inline-block !important;
-    margin: 0 auto 10px !important;
-    font-size: 22px !important;
-    line-height: 1 !important;
+  .navbar-brand b {
+    padding: 4px 14px;
   }
 
-  /* smaller heading/subtext so nothing spills out */
-  #home .hero-text h1.responsive-headline{
-    font-size: 18px !important;
-    line-height: 1.25 !important;
-    margin: 0 0 8px !important;
+  .navbar-nav {
+    position: static !important;
+    float: none !important;
+    text-align: left !important;
+    margin: 0;
+    padding: 8px 0 14px;
   }
 
-  #home .hero-text p{
-    font-size: 12px !important;
-    line-height: 1.35 !important;
-    margin: 0 auto 10px !important;
-    max-width: 280px !important;
+  .navbar-nav > li {
+    display: block !important;
   }
 
-  /* buttons stay inside the image area */
-  #home .hero-text .btn{
-    display: inline-block !important;
-    margin: 4px 4px 0 !important;
-    padding: 8px 12px !important;
-    font-size: 13px !important;
-    position: relative;
-    z-index: 2;
+  .navbar-inverse .navbar-nav > li > a,
+  .header .navbar-nav > li > a {
+    margin: 0 !important;
+    padding: 12px 20px !important;
+    font-size: 16px !important;
+    line-height: 1.3 !important;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
   }
 
-  /* give the next section a clean start */
-  #features{
-    margin-top: 0 !important;
-    padding-top: 28px !important;
+  .navbar-collapse {
+    border-top: 0 !important;
+    box-shadow: none !important;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
   }
-}
-@media (max-width: 767px){
 
-  /* hero area */
-  #home .banner-container{
-    min-height: 360px !important;
+  /* Hero */
+  #home {
+    padding-top: 64px;
+  }
+
+  #home .banner-container {
     position: relative !important;
+    min-height: 360px !important;
+    height: auto !important;
     overflow: hidden !important;
+    background-size: cover !important;
   }
 
-  #home .banner-container > img{
+  #home .banner-container > img {
     width: 100% !important;
     height: 360px !important;
     object-fit: cover !important;
-    object-position: center top !important;
+    object-position: center center !important;
     display: block !important;
   }
 
-  /* stop template positioning from pushing content around */
-  #home .banner-content,
-  #home .hero-text{
-    position: static !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    transform: none !important;
-  }
-
-  /* stack content neatly inside the hero */
-  #home .banner-content{
-    min-height: 360px !important;
-    padding: 14px 12px 20px !important;
-    display: flex !important;
-    align-items: flex-start !important;
-    justify-content: flex-start !important;
-    text-align: center !important;
-  }
-
-  #home .hero-text{
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 auto !important;
-  }
-
-  /* logo */
-  #home .hero-text .logo{
-    display: inline-block !important;
-    margin: 0 auto 8px !important;
-    font-size: 20px !important;
-    line-height: 1 !important;
-  }
-
-  /* heading + subtext */
-  #home .hero-text h1.responsive-headline{
-    font-size: 16px !important;
-    line-height: 1.25 !important;
-    margin: 0 0 6px !important;
-    max-width: 280px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-  }
-
-  #home .hero-text p{
-    font-size: 11px !important;
-    line-height: 1.35 !important;
-    margin: 0 auto 10px !important;
-    max-width: 260px !important;
-  }
-
-  /* button row */
-  #home .hero-text .btn{
-    display: inline-block !important;
-    vertical-align: top !important;
-    margin: 4px 4px 0 !important;
-    padding: 8px 12px !important;
-    font-size: 12px !important;
-    line-height: 1.2 !important;
-    position: static !important;
-    float: none !important;
-    clear: none !important;
-    transform: none !important;
-  }
-
-  /* hide down arrow if still present */
-  #home .arrow-link{
-    display: none !important;
-  }
-}
-@media (max-width: 767px){
-
-  /* Hero container */
-  #home .banner-container{
-    position: relative !important;
-    height: 340px !important;
-    min-height: 340px !important;
-    overflow: hidden !important;
-  }
-
-  /* Hero image fills the whole hero */
-  #home .banner-container > img{
-    width: 100% !important;
-    height: 340px !important;
-    object-fit: cover !important;
-    object-position: center top !important;
-    display: block !important;
-  }
-
-  /* Put content ON TOP of the image */
-  #home .banner-content{
+  #home .banner-content {
     position: absolute !important;
     inset: 0 !important;
     z-index: 2 !important;
-    padding: 18px 12px !important;
     display: flex !important;
-    align-items: flex-end !important;
-    justify-content: center !important;
-    text-align: center !important;
-    background: rgba(0,0,0,0.15) !important; /* subtle dark overlay */
-  }
-
-  #home .hero-text{
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 auto !important;
-  }
-
-  /* Hide duplicate hero logo */
-  #home .hero-text .logo{
-    display: none !important;
-  }
-
-  /* Keep only clean small text */
-  #home .hero-text h1.responsive-headline{
-    font-size: 16px !important;
-    line-height: 1.25 !important;
-    margin: 0 0 8px !important;
-    max-width: 280px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    color: rgba(255,255,255,0.9) !important;
-  }
-
-  #home .hero-text p{
-    display: none !important; /* hide extra paragraph for cleaner mobile */
-  }
-
-  /* Buttons */
-  #home .hero-text .btn{
-    display: inline-block !important;
-    margin: 4px 4px 0 !important;
-    padding: 8px 12px !important;
-    font-size: 12px !important;
-    line-height: 1.2 !important;
-    position: static !important;
-    float: none !important;
-    transform: none !important;
-  }
-
-  /* Hide down arrow */
-  #home .arrow-link{
-    display: none !important;
-  }
-
-  /* Remove any forced white gap */
-  #home,
-  #home .container{
-    margin-bottom: 0 !important;
-    padding-bottom: 0 !important;
-  }
-
-  /* Pull next section right up */
-  #features{
-    margin-top: 0 !important;
-    padding-top: 28px !important;
-  }
-}
-@media (max-width: 767px){
-
-  /* Keep hero content higher so buttons don't get cut off */
-  #home .banner-content{
     align-items: center !important;
-    padding-top: 20px !important;
-    padding-bottom: 55px !important;
+    justify-content: center !important;
+    padding: 20px 16px !important;
+    text-align: center !important;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,0.25),
+      rgba(0,0,0,0.35)
+    ) !important;
   }
 
-  /* Move the text block upward slightly */
-  #home .hero-text{
-    transform: translateY(60px) !important;
+  #home .hero-text {
+    width: 100% !important;
+    max-width: 340px !important;
+    margin: 0 auto !important;
+    transform: none !important;
+    color: #fff !important;
   }
 
-  /* Keep buttons compact and fully visible */
-  #home .hero-text .btn{
-    margin-top: 8px !important;
-    margin-bottom: 0 !important;
-    padding: 7px 10px !important;
-    font-size: 11px !important;
+  /* Hide duplicate hero logo on mobile */
+  #home .hero-text .logo {
+    display: none !important;
+  }
+
+  #home .hero-text h1,
+  #home .hero-text h1.responsive-headline {
+    font-size: clamp(24px, 6vw, 32px) !important;
+    line-height: 1.2 !important;
+    margin: 0 0 14px !important;
+    color: #fff !important;
+    text-shadow: none !important;
+  }
+
+  #home .hero-text p {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+    margin: 0 auto 16px !important;
+    max-width: 320px !important;
+    color: rgba(255,255,255,0.92) !important;
+    text-shadow: none !important;
+  }
+
+  /* If you add class="hero-actions" to the button wrapper */
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 0 !important;
+  }
+
+  #home .hero-text .btn {
+    display: block !important;
+    width: 100%;
+    margin: 0 !important;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    line-height: 1.3 !important;
+  }
+
+  .arrow-link {
+    display: none !important;
+  }
+
+  /* General section spacing */
+  .page-section,
+  #aboutUs,
+  #services,
+  #team,
+  #contactUs {
+    padding: 28px 0 !important;
+  }
+
+  .heading {
+    margin-bottom: 20px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .heading h2 {
+    font-size: 28px !important;
+    line-height: 1.2 !important;
+  }
+
+  .heading p {
+    font-size: 1rem !important;
+  }
+
+  /* Features section */
+  .features .features-left,
+  .features .features-right {
+    text-align: left !important;
+    margin: 0 !important;
+  }
+
+  .features .feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 22px !important;
+  }
+
+  .features .icon-container {
+    flex: 0 0 46px;
+  }
+
+  .features .phone-image {
+    max-width: 170px !important;
+    margin: 10px auto 24px !important;
+  }
+
+  /* About section */
+  .row .six,
+  #aboutUs .left,
+  #aboutUs .right {
+    width: 100% !important;
+    float: none !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  #aboutUs .feature-media {
+    margin-top: 18px;
+  }
+
+  /* Services */
+  #services .col-md-4,
+  #services .col-sm-4 {
+    margin-bottom: 18px;
+  }
+
+  .services h3 {
+    font-size: 18px !important;
+    line-height: 1.4 !important;
+  }
+
+  .services .fa {
+    font-size: 28px !important;
+  }
+
+  /* Team / process cards */
+  #team .team-content .row {
+    display: block !important;
+  }
+
+  #team .team-content .row > div {
+    display: block !important;
+    margin-bottom: 20px !important;
+  }
+
+  #team .member-img {
+    height: 220px !important;
+  }
+
+  .team-member h4 {
+    font-size: 18px !important;
+    line-height: 1.4 !important;
+    padding: 8px 10px 0;
+  }
+
+  /* Contact */
+  .contact-parlex {
+    background-attachment: scroll !important;
+    background-position: center center !important;
+  }
+
+  .parlex-back {
+    padding: 28px 0 !important;
+  }
+
+  .form-group {
+    width: 100% !important;
+    margin-bottom: 12px !important;
+  }
+
+  .form-control {
+    padding: 16px 12px !important;
+    width: 100% !important;
+    margin-bottom: 12px !important;
+  }
+
+  #contactUs .btn,
+  #submit {
+    width: 100%;
+    padding: 12px 16px;
+    font-size: 15px;
+  }
+
+  /* Footer button */
+  .topHome {
+    right: 14px;
+    bottom: 14px;
   }
 }

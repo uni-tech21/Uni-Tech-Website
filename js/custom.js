@@ -32,45 +32,47 @@ var customScripts = {
         $(".fancybox").fancybox();
     },
     onePageNav: function () {
+    var isMobile = window.innerWidth < 768;
 
-        $('#mainNav').onePageNav({
-            currentClass: 'active',
-            changeHash: false,
-            scrollSpeed: 950,
-            scrollThreshold: 0.2,
-            filter: '',
-            easing: 'swing',
-            begin: function () {
-                //I get fired when the animation is starting
-            },
-            end: function () {
-                   //I get fired when the animation is ending
-				if(!$('#main-nav ul li:first-child').hasClass('active')){
-					$('.header').addClass('addBg');
-				}else{
-						$('.header').removeClass('addBg');
-				}
-				
-            },
-            scrollChange: function ($currentListItem) {
-                //I get fired when you enter a section and I pass the list item of the section
-				if(!$('#main-nav ul li:first-child').hasClass('active')){
-					$('.header').addClass('addBg');
-				}else{
-						$('.header').removeClass('addBg');
-				}
-			}
-        });
-		
-		$("a[href='#top']").click(function () {
-                $("html, body").animate({ scrollTop: 0 }, "slow");
-                return false;
-            });
-			$("a[href='#basics']").click(function () {
-                $("html, body").animate({ scrollTop: $('#features').offset().top - 75 }, "slow"); 
-                return false;
-            });
-    }, 
+    $('#mainNav').onePageNav({
+        currentClass: 'active',
+        changeHash: false,
+        scrollSpeed: isMobile ? 500 : 950,
+        scrollThreshold: 0.2,
+        filter: '',
+        easing: 'swing',
+        end: function () {
+            if(!$('#main-nav ul li:first-child').hasClass('active')){
+                $('.header').addClass('addBg');
+            } else {
+                $('.header').removeClass('addBg');
+            }
+        },
+        scrollChange: function () {
+            if(!$('#main-nav ul li:first-child').hasClass('active')){
+                $('.header').addClass('addBg');
+            } else {
+                $('.header').removeClass('addBg');
+            }
+        }
+    });
+
+    $('#mainNav a').on('click', function () {
+        if (isMobile) {
+            $('#main-nav').removeClass('in');
+        }
+    });
+
+    $("a[href='#top']").click(function () {
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+        return false;
+    });
+
+    $("a[href='#basics']").click(function () {
+        $("html, body").animate({ scrollTop: $('#features').offset().top - (isMobile ? 64 : 75) }, "slow");
+        return false;
+    });
+},
     owlSlider: function () {
         var owl = $("#owl-demo");
         owl.owlCarousel();
@@ -91,27 +93,30 @@ var customScripts = {
         });
     },
 	waySlide: function(){
-		  	/* Waypoints Animations
-		   ------------------------------------------------------ */		   			  
-			$('#aboutUs').waypoint(function() {				
-			$('.design').addClass( 'animated fadeInUp show' );   
-			}, { offset: 350 }); 
-			
-			$('.features').waypoint(function() { 
-			$('.phone-image').addClass( 'animated bounceIn' ); 
-			$('.features-left').addClass( 'animated fadeInLeft show' );   
-			$('.features-right').addClass( 'animated fadeInRight show' );  
-			}, { offset: 350 });
-			$('#services').waypoint(function() {    
-			$('.serviceBox').addClass( 'animated fadeInRight show' );  
-			$('.owl-wrapper-outer').addClass( 'animated fadeInRight show' ); 
-			}, { offset: 350 });
-			$('#work').waypoint(function() {    
-			 $('#portfolio').addClass( 'animated fadeInRight show' ); 
-			}, { offset: 350 });
-			
-			
-		},
+    if (window.innerWidth < 768) {
+        $('.features-left, .features-right, .design, .serviceBox, .owl-wrapper-outer, #portfolio').css('opacity','1');
+        return;
+    }
+
+    $('#aboutUs').waypoint(function() {
+        $('.design').addClass('animated fadeInUp show');
+    }, { offset: 350 });
+
+    $('.features').waypoint(function() {
+        $('.phone-image').addClass('animated bounceIn');
+        $('.features-left').addClass('animated fadeInLeft show');
+        $('.features-right').addClass('animated fadeInRight show');
+    }, { offset: 350 });
+
+    $('#services').waypoint(function() {
+        $('.serviceBox').addClass('animated fadeInRight show');
+        $('.owl-wrapper-outer').addClass('animated fadeInRight show');
+    }, { offset: 350 });
+
+    $('#work').waypoint(function() {
+        $('#portfolio').addClass('animated fadeInRight show');
+    }, { offset: 350 });
+},
 	fitText: function(){
     if (window.innerWidth > 767) {
         setTimeout(function() {
