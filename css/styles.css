@@ -1465,3 +1465,26 @@ nav#filter li {
     padding-top: 50px !important;
   }
 }
+@media (max-width: 767px){
+
+  /* keep hero buttons clear of the blue section */
+  #home .hero-text .btn{
+    background: #0f4f86 !important;
+    border: 2px solid rgba(255,255,255,0.18) !important;
+    color: #fff !important;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.28);
+    border-radius: 8px;
+    position: relative;
+    z-index: 5;
+  }
+
+  /* move the button row slightly upward */
+  #home .hero-text{
+    padding-bottom: 24px;
+  }
+
+  /* add breathing room before the next section */
+  #features{
+    padding-top: 90px !important;
+  }
+}
