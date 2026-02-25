@@ -1415,3 +1415,53 @@ nav#filter li {
     padding-top: 115px !important;
   }
 }
+@media (max-width: 767px){
+  #home .hero-text .logo{
+    display: none !important;
+  }
+}
+@media (max-width: 767px){
+
+  /* Make the hero tall enough so text doesn't overlap next section */
+  #home .banner-content{
+    min-height: 560px !important;
+    padding: 150px 20px 90px !important;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    text-align: center;
+  }
+
+  #home .hero-text{
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Force a sensible mobile headline size */
+  #home .hero-text h1.responsive-headline{
+    font-size: 28px !important;
+    line-height: 1.2 !important;
+    margin: 0 0 16px !important;
+  }
+
+  #home .hero-text p{
+    font-size: 15px !important;
+    line-height: 1.45 !important;
+    margin: 0 auto 16px !important;
+    max-width: 320px;
+  }
+
+  /* Keep buttons tidy */
+  #home .hero-text .btn{
+    display: inline-block !important;
+    margin: 6px 4px !important;
+    font-size: 14px !important;
+    padding: 10px 14px !important;
+  }
+
+  /* Push the next section down cleanly */
+  #features{
+    margin-top: 0 !important;
+    padding-top: 50px !important;
+  }
+}

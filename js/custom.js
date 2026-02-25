@@ -112,11 +112,16 @@ var customScripts = {
 			
 			
 		},
-		fitText: function(){			  
-				setTimeout(function() {			
-				$('h1.responsive-headline').fitText(1.2, { minFontSize: '16px', maxFontSize: '40px' });			
-				}, 100);
-		},
+		fitText: function(){
+    if (window.innerWidth > 767) {
+        setTimeout(function() {
+            $('h1.responsive-headline').fitText(1.2, {
+                minFontSize: '16px',
+                maxFontSize: '40px'
+            });
+        }, 100);
+    }
+},
     init: function () {
         customScripts.onePageNav();
         customScripts.profile();
