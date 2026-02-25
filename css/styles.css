@@ -1339,3 +1339,57 @@ nav#filter li {
     display: block !important;
   }
 }
+/* Show full top nav on mobile instead of burger */
+@media (max-width: 767px){
+
+  /* Hide burger button */
+  .navbar-toggle{
+    display: none !important;
+  }
+
+  /* Keep nav visible */
+  .navbar-collapse{
+    display: block !important;
+    visibility: visible !important;
+    height: auto !important;
+    overflow: visible !important;
+    border-top: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Stop Bootstrap collapse hiding it */
+  .collapse{
+    display: block !important;
+  }
+
+  /* Keep nav items inline across the top */
+  #mainNav{
+    float: none !important;
+    text-align: center;
+    width: 100%;
+    margin: 10px 0 0;
+  }
+
+  #mainNav > li{
+    float: none !important;
+    display: inline-block !important;
+  }
+
+  #mainNav > li > a{
+    display: inline-block;
+    padding: 10px 8px;
+    font-size: 16px;
+  }
+
+  /* Brand/logo centred above if needed */
+  .navbar-header{
+    float: none !important;
+    text-align: center;
+    width: 100%;
+  }
+
+  .navbar-brand{
+    float: none !important;
+    display: inline-block !important;
+  }
+}
