@@ -505,5 +505,14 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 </script>
+<script>
+$(window).on('scroll', function () {
+  if ($(window).scrollTop() > 20) {
+    $('.header').addClass('addBg');
+  } else {
+    $('.header').removeClass('addBg');
+  }
+});
+</script>
 </body>
 </html>
