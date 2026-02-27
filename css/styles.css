@@ -1502,7 +1502,7 @@ nav#filter li {
   }
 
   .heading p {
-    font-size: 1rem !important;
+    font-size: 14px !important;
   }
 
   @media (max-width: 767px) {
@@ -1530,6 +1530,7 @@ nav#filter li {
     max-width: 320px;
     margin: 0 auto;
     color: rgba(255, 255, 255, 0.78) !important;
+	font-size: 18px !important;
   }
 
   /* Put the phone near the top on mobile */
