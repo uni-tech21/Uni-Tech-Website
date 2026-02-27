@@ -514,5 +514,39 @@ $(window).on('scroll', function () {
   }
 });
 </script>
+<script>
+$(function () {
+  var $menu = $('#main-nav');
+  var $toggle = $('#nav-toggle');
+
+  function closeMenu() {
+    if ($menu.hasClass('in')) {
+      $menu.collapse('hide');
+    }
+  }
+
+  /* Close after tapping a menu link */
+  $('#mainNav a').on('click', function () {
+    closeMenu();
+  });
+
+  /* Close if user taps outside the burger/menu */
+  $(document).on('click touchstart', function (e) {
+    var $target = $(e.target);
+
+    if (
+      !$target.closest('#main-nav').length &&
+      !$target.closest('#nav-toggle').length
+    ) {
+      closeMenu();
+    }
+  });
+
+  /* Close on scroll */
+  $(window).on('scroll', function () {
+    closeMenu();
+  });
+});
+</script>
 </body>
 </html>
