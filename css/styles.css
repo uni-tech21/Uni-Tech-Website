@@ -1692,3 +1692,25 @@ nav#filter li {
     bottom: 14px;
   }
 }
+@media (max-width: 767px){
+
+  /* Add breathing room on mobile */
+  #aboutUs .container,
+  #services .container,
+  #team .container,
+  #contactUs .container,
+  #features .container{
+    padding-left: 22px !important;
+    padding-right: 22px !important;
+  }
+
+  /* Also stop long text blocks touching the edges */
+  #aboutUs p,
+  #services p,
+  #team p,
+  #contactUs p,
+  #features p{
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+}
