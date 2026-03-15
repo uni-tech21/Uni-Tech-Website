@@ -330,7 +330,7 @@ a:hover {
 }
 .logo b {
 	color: #fff;
-	font-family: 'Lobster', cursive;
+	font-family: 'Arial', cursive;
 	border: 1px solid rgba(255, 255, 255, 0.25);
 	padding: 6px 22px;
 	border-radius: 40px;
@@ -480,6 +480,13 @@ a.arrow-link:hover {
 .hero-img {
 	text-align: center;
 	margin: 124px auto 24px auto;
+}
+/* Banner Logo - Adjust the height value to change logo size */
+.banner-logo {
+	height: 400px;  /* CHANGE THIS VALUE to make logo bigger or smaller (e.g., 250px, 350px, 400px) */
+	width: auto;
+	display: block;
+	margin: 40px auto 30px auto;
 }
 .da-slider {
 	margin: 0 auto !important;
