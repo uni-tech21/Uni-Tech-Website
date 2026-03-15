@@ -7,6 +7,12 @@ License: Free to use for personal and commercial, but you need to place back lin
 @import url(http://fonts.googleapis.com/css?family=Lobster);
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,600);
 @import url(http://fonts.googleapis.com/css?family=Oswald:400,700);
+
+/* SCROLL OFFSET - Adjust this value to control how much the page scrolls down when clicking header navigation links */
+:root {
+	--scroll-offset: 70px; /* Change this value to adjust scroll distance (try 80px, 100px, 120px, etc.) */
+}
+
 * {
 	margin: 0;
 	padding: 0;
@@ -26,6 +32,18 @@ body {
 	-moz-transition: all 0.3s linear;
 	-o-transition: all 0.3s linear;
 }
+
+/* Apply scroll offset to all major sections */
+#home,
+#aboutUs,
+#features,
+#services,
+#team,
+#work,
+#contactUs {
+	scroll-margin-top: var(--scroll-offset);
+}
+
 ::selection {
 	color: #fff;
 	background: #0F60A0;
