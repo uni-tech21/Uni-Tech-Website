@@ -6,7 +6,7 @@ A responsive static website for Uni-Tech, serving homes and small businesses in 
 
 The new direction combines oversized editorial typography, warm off-white, electric lime and lilac, original device illustrations, and a large typographic footer. It carries through the homepage, services, web design, contact, confirmation and 404 pages.
 
-The homepage sculpture is an original, locally generated torus knot rendered using native WebGL. It responds gently to the pointer and changes colour when visitors explore Repair, Create and Connect. Each mode links to the appropriate service. It has a pause/play control, starts still for reduced-motion preferences, stops when offscreen or in a background tab, and falls back to an SVG illustration when WebGL is unavailable. No 3D library or downloaded model is required.
+The homepage features an original SVG circuit board with a raised Uni-Tech chip. Animated light pulses travel along the etched traces. Repair, Create and Connect each illuminate the corresponding circuit and device icon, while linking to the appropriate service. The board tilts gently with the pointer; pause/play, reduced motion, offscreen and background-tab handling control the animation. It remains visible without JavaScript and needs no WebGL, graphics library or downloaded model.
 
 The design playground includes Studio, Trades and Café concepts, each with its own typography, copy and CSS illustration. Colour controls work independently; the web design page also offers desktop/mobile previews. All concepts are explicitly identified as illustrative work, not customer projects.
 
