@@ -1,28 +1,45 @@
-# Uni-Tech website
+# Uni-Tech / Good tech. Great things.
 
-A responsive, static website for Uni-Tech. Open `index.html` to view it locally, or serve this folder with any static web server. No package install or build process is needed.
+A responsive static website for Uni-Tech, serving homes and small businesses in Kent and East Sussex. Open `index.html` locally or use any static web server. No build step or package installation is required.
 
-## Pages
+## Design
 
-- `index.html`: home, service finder, interactive design concept, about, process and FAQs.
-- `services.html`: detailed services, audience filters and enquiry links.
-- `websites.html`: web design information with palette and desktop/mobile preview controls.
+The new direction combines oversized editorial typography, warm off-white, electric lime and lilac, original device illustrations, and a large typographic footer. It carries through the homepage, services, web design, contact, confirmation and 404 pages.
+
+The homepage sculpture is an original, locally generated torus knot rendered using native WebGL. It responds gently to the pointer and changes colour when visitors explore Repair, Create and Connect. Each mode links to the appropriate service. It has a pause/play control, starts still for reduced-motion preferences, stops when offscreen or in a background tab, and falls back to an SVG illustration when WebGL is unavailable. No 3D library or downloaded model is required.
+
+The design playground includes Studio, Trades and Café concepts, each with its own typography, copy and CSS illustration. Colour controls work independently; the web design page also offers desktop/mobile previews. All concepts are explicitly identified as illustrative work, not customer projects.
+
+## Files
+
+- `index.html`: hero, service highlights, service finder, design concepts, about, process and FAQs.
+- `services.html`: full service directory, audience filters and enquiry links.
+- `websites.html`: website services and the interactive design playground.
 - `contact.html`: enquiry form with service preselection.
-- `thank-you.html`: successful enquiry confirmation.
-- `404.html`: missing-page fallback.
+- `thank-you.html`: enquiry confirmation.
+- `404.html`: branded missing-page fallback.
+- `css/site.css`: existing content components and responsive foundations.
+- `css/next.css`: new art direction, illustrations and responsive refinements.
+- `js/site.js`: navigation, finder, palette/device controls, filters and form handling.
+- `js/next.js`: scene renderer, scene modes, design concepts and progressive enhancements.
+- `images/favicon.svg`: updated brand mark.
 
-## Editing
+Navigation and footer markup are shared by convention, rather than generated; update them consistently across pages. Legacy styles, scripts and images remain in the repository but are not loaded by the redesigned pages.
 
-The pages contain their own content and shared navigation/footer markup. Update shared text consistently across all pages. Styles are in `css/site.css`; interactive behaviour is in `js/site.js`. Older assets and scripts are retained in the repository but are not loaded by the new pages. The new design and illustrations are original HTML/CSS/SVG; the former template is not used.
+## Contact and content
 
-The `enquires@uni-tech.co.uk` spelling is deliberately preserved from the existing website. The contact form keeps the existing Formspree endpoint, `https://formspree.io/f/xykdypnr`. Do not replace either without checking the intended account. The form works as a regular POST without JavaScript; with JavaScript it shows submission progress, preserves entered details after errors, and redirects after success. A request that times out may still have been received; the error message therefore says delivery could not be confirmed.
+The existing `enquires@uni-tech.co.uk` spelling and Formspree endpoint `https://formspree.io/f/xykdypnr` are preserved. The contact form works as a regular POST without JavaScript. With JavaScript it validates, indicates progress, redirects on success and preserves entries after errors. A timeout may still mean a message was received, so the error copy avoids claiming definite non-delivery.
 
-Fonts load from Google Fonts, with local system fallbacks. The design playground is clearly labelled as a concept, not client work. No testimonials, prices, qualifications or turnaround guarantees have been invented.
+The malformed repairs option in the original form has been corrected, restoring repairs preselection. No prices, reviews, qualifications or turnaround guarantees have been invented.
+
+Fonts load from Google Fonts with system fallbacks. Essential navigation, links, FAQs and form access work without JavaScript. JavaScript-only controls are hidden in that case.
 
 ## Verification
 
-Checked all six pages at 1440, 768, 390 and 320 pixels wide. Tested all service-finder options, palette switching, desktop/mobile preview, filters, menu and Escape behaviour, FAQ expansion, contact preselection, local asset/link existence and JavaScript errors. Form success and failure were tested with intercepted, simulated responses; no test enquiry was sent. Actual inbox delivery still needs to be checked with a genuine enquiry after publication.
+Browser checks cover all six pages at 1440, 1024, 768, 390 and 320 pixels: no horizontal page overflow, one primary heading, and local asset/link/anchor integrity. Interaction checks cover the scene modes and motion controls, all finder routes, concept/palette/device switches, audience filters, mobile menu and Escape focus, keyboard FAQs, reduced motion, and no-JavaScript navigation.
+
+Contact checks cover all six preselected services, required-field validation and intercepted success/failure responses. No test enquiry is sent to Formspree. Live inbox delivery requires a genuine enquiry after publication.
 
 ## Publishing
 
-The original `CNAME` is retained. Publish through the repository's existing hosting workflow when ready. The redesign itself does not commit, push or deploy the site.
+The original `CNAME` and hosting setup are retained. Publish using the repository's existing workflow when ready. This local redesign does not commit, push or deploy the website.

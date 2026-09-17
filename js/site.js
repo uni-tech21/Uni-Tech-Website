@@ -1,4 +1,5 @@
 'use strict';
+document.documentElement.classList.add('js');
 const menu = document.querySelector('.menu-toggle');
 const nav = document.querySelector('#main-nav');
 function closeMenu(restoreFocus = false) {
