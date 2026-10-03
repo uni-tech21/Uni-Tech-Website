@@ -1,45 +1,40 @@
-# Uni-Tech / Good tech. Great things.
+# Uni-Tech — websites that feel like you
 
-A responsive static website for Uni-Tech, serving homes and small businesses in Kent and East Sussex. Open `index.html` locally or use any static web server. No build step or package installation is required.
+A static website focused on website design for independent businesses in Kent and East Sussex. No package install or build step is needed. Serve the folder with a local static server or publish through the existing hosting workflow. The existing `CNAME` is unchanged.
 
-## Design
+## Pages
 
-The new direction combines oversized editorial typography, warm off-white, electric lime and lilac, original device illustrations, and a large typographic footer. It carries through the homepage, services, web design, contact, confirmation and 404 pages.
+- `index.html`: website-design homepage, illustrative concepts, process, approach and FAQs.
+- `websites.html`: interactive design playground.
+- `services.html`: new website design, redesign and website care.
+- `contact.html`: website enquiry form, including a visitor’s playground brief when supplied.
+- `thank-you.html` and `404.html`: confirmation and missing-page views.
 
-The homepage features an original SVG circuit board with a raised Uni-Tech chip. Animated light pulses travel along the etched traces. Repair, Create and Connect each illuminate the corresponding circuit and device icon, while linking to the appropriate service. The board tilts gently with the pointer; pause/play, reduced motion, offscreen and background-tab handling control the animation. It remains visible without JavaScript and needs no WebGL, graphics library or downloaded model.
+`css/site.css` provides shared foundations; `css/design.css` contains the shared visual direction; `css/home.css` gives the homepage its full-width photographic hero, layered concept previews and larger image-led sections. `js/site.js` handles navigation and contact submission; `js/design.js` handles the playground. Earlier assets and unused scripts remain in the repository but are not loaded by these pages.
 
-The design playground includes Studio, Trades and Café concepts, each with its own typography, copy and CSS illustration. Colour controls work independently; the web design page also offers desktop/mobile previews. All concepts are explicitly identified as illustrative work, not customer projects.
+## Design playground
 
-## Files
+Visitors can choose a studio, barber, café or trades concept, customise their business name and headline, pick one of four palettes, change typography and layout, toggle a services section and preview a phone-sized layout. These are illustrative concepts, not customer projects or a self-service publishing platform.
 
-- `index.html`: hero, service highlights, service finder, design concepts, about, process and FAQs.
-- `services.html`: full service directory, audience filters and enquiry links.
-- `websites.html`: website services and the interactive design playground.
-- `contact.html`: enquiry form with service preselection.
-- `thank-you.html`: enquiry confirmation.
-- `404.html`: branded missing-page fallback.
-- `css/site.css`: existing content components and responsive foundations.
-- `css/next.css`: new art direction, illustrations and responsive refinements.
-- `js/site.js`: navigation, finder, palette/device controls, filters and form handling.
-- `js/next.js`: scene renderer, scene modes, design concepts and progressive enhancements.
-- `images/favicon.svg`: updated brand mark.
+Changes save locally in the visitor’s browser when storage is available. Opening a direct concept link starts that concept fresh; opening the playground without a concept restores the saved design. Reset restores the defaults. A text design brief can be downloaded. “Let’s build this” includes the current design in the contact URL, where the choices appear in a read-only field and are submitted with the enquiry. Inputs are bounded and inserted as text. No design is sent to Uni-Tech until the visitor submits the contact form.
 
-Navigation and footer markup are shared by convention, rather than generated; update them consistently across pages. Legacy styles, scripts and images remain in the repository but are not loaded by the redesigned pages.
+## Contact
 
-## Contact and content
+The existing `enquires@uni-tech.co.uk` address and `https://formspree.io/f/xykdypnr` endpoint are preserved. The form supports normal HTML submission without JavaScript; enhanced submission validates fields, prevents duplicates, preserves entries after errors and redirects on confirmed success. The form informs visitors that Formspree handles their enquiry. Real inbox delivery must be checked with a genuine enquiry after publication.
 
-The existing `enquires@uni-tech.co.uk` spelling and Formspree endpoint `https://formspree.io/f/xykdypnr` are preserved. The contact form works as a regular POST without JavaScript. With JavaScript it validates, indicates progress, redirects on success and preserves entries after errors. A timeout may still mean a message was received, so the error copy avoids claiming definite non-delivery.
+## Assets
 
-The malformed repairs option in the original form has been corrected, restoring repairs preselection. No prices, reviews, qualifications or turnaround guarantees have been invented.
+Photography is saved locally in `images/design/` from Unsplash:
 
-Fonts load from Google Fonts with system fallbacks. Essential navigation, links, FAQs and form access work without JavaScript. JavaScript-only controls are hidden in that case.
+- Interior: https://images.unsplash.com/photo-1600210492486-724fe5c67fb0
+- Café: https://images.unsplash.com/photo-1442512595331-e89e73853f31
+- Barber hero: https://images.unsplash.com/photo-1503951914875-452162b0f3f1
+- Barber detail: https://images.unsplash.com/photo-1599351431202-1e0f0137899a
+
+These images are design-preview imagery, not Uni-Tech client work. DM Sans and Manrope are self-hosted in `font/design/`, with their SIL Open Font License files, to avoid a remote font stylesheet delaying the site. The illustrative compositions and page design are original; Squarespace was the visual reference.
 
 ## Verification
 
-Browser checks cover all six pages at 1440, 1024, 768, 390 and 320 pixels: no horizontal page overflow, one primary heading, and local asset/link/anchor integrity. Interaction checks cover the scene modes and motion controls, all finder routes, concept/palette/device switches, audience filters, mobile menu and Escape focus, keyboard FAQs, reduced motion, and no-JavaScript navigation.
+Browser checks cover all six pages at 1440, 1024, 768, 390 and 320 pixels, including page overflow and primary headings. Playground checks cover editing, concepts, palette, type, layout, services, screen size, persistence, reset, download and contact handoff. Contact success and failure are checked using intercepted responses; no automated message is sent to the live endpoint. Mobile navigation and the no-JavaScript fallback are checked separately.
 
-Contact checks cover all six preselected services, required-field validation and intercepted success/failure responses. No test enquiry is sent to Formspree. Live inbox delivery requires a genuine enquiry after publication.
-
-## Publishing
-
-The original `CNAME` and hosting setup are retained. Publish using the repository's existing workflow when ready. This local redesign does not commit, push or deploy the website.
+This redesign is local. It has not been committed, pushed or deployed.
