@@ -45,14 +45,14 @@
     document.getElementById('preview-services').hidden=!state.services;
     document.getElementById('palette-name').textContent=p[3];
     document.querySelectorAll('[data-colour]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.colour===state.colour)));
-    document.querySelectorAll('[data-layout]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.layout===state.layout)));
+    document.querySelectorAll('button[data-layout]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.layout===state.layout)));
     document.getElementById('design-enquiry').href='contact.html?service=websites&design='+encodeURIComponent(JSON.stringify(state));
     if(save){let saved=false;try{localStorage.setItem('unitech-design-v1',JSON.stringify(state));saved=true;}catch{} document.getElementById('design-status').textContent=saved?'Preview updated. Your design is saved in this browser.':'Preview updated. Download your brief to keep a copy.';}
   }
   form.addEventListener('submit',e=>e.preventDefault());
   form.addEventListener('input',()=>{state.concept=form.elements.concept.value;state.business=form.elements.business.value;state.headline=form.elements.headline.value;state.typeface=form.elements.typeface.value;state.services=document.getElementById('show-services').checked;render();});
   document.querySelectorAll('[data-colour]').forEach(b=>b.addEventListener('click',()=>{state.colour=b.dataset.colour;render();}));
-  document.querySelectorAll('[data-layout]').forEach(b=>b.addEventListener('click',()=>{state.layout=b.dataset.layout;render();}));
+  document.querySelectorAll('button[data-layout]').forEach(b=>b.addEventListener('click',()=>{state.layout=b.dataset.layout;render();}));
   document.querySelectorAll('[data-screen]').forEach(b=>b.addEventListener('click',()=>{preview.classList.toggle('is-phone',b.dataset.screen==='mobile');document.querySelectorAll('[data-screen]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));}));
   form.addEventListener('reset',e=>{e.preventDefault();state={...defaults};fill();preview.classList.remove('is-phone');document.querySelectorAll('[data-screen]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.screen==='desktop')));render();});
   document.getElementById('download-brief').addEventListener('click',()=>{const blob=new Blob([brief(state)],{type:'text/plain;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='my-unitech-design-brief.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);document.getElementById('design-status').textContent='Your design brief is ready to download.';});

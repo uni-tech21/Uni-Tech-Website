@@ -4,9 +4,10 @@ A static website focused on website design for independent businesses in Kent an
 
 ## Pages
 
-- `index.html`: website-design homepage, illustrative concepts, process, approach and FAQs.
+- `index.html`: website-design homepage, scrollable featured websites, links to dedicated portfolio and services pages, process, approach and FAQs.
 - `websites.html`: interactive design playground.
-- `services.html`: new website design, redesign and website care.
+- `portfolio.html`: clickable live projects for Impact Scaffolding, Ross Services and Julie Martin Fine Art.
+- `services.html`: new website design, redesign and website care, with included work and starting prices.
 - `contact.html`: website enquiry form, including a visitor’s playground brief when supplied.
 - `thank-you.html` and `404.html`: confirmation and missing-page views.
 
@@ -16,7 +17,7 @@ A static website focused on website design for independent businesses in Kent an
 
 Visitors can choose a studio, barber, café or trades concept, customise their business name and headline, pick one of four palettes, change typography and layout, toggle a services section and preview a phone-sized layout. These are illustrative concepts, not customer projects or a self-service publishing platform.
 
-Changes save locally in the visitor’s browser when storage is available. Opening a direct concept link starts that concept fresh; opening the playground without a concept restores the saved design. Reset restores the defaults. A text design brief can be downloaded. “Let’s build this” includes the current design in the contact URL, where the choices appear in a read-only field and are submitted with the enquiry. Inputs are bounded and inserted as text. No design is sent to Uni-Tech until the visitor submits the contact form.
+Changes save locally in the visitor’s browser when storage is available. Opening a direct concept link starts that concept fresh; opening the playground without a concept restores the saved design. Reset restores the defaults. A text design brief can be downloaded. “Send this design” includes the current design in the contact URL, where the choices appear in a read-only field and are submitted with the enquiry. Inputs are bounded and inserted as text. No design is sent to Uni-Tech until the visitor submits the contact form.
 
 ## Contact
 
@@ -35,6 +36,22 @@ These images are design-preview imagery, not Uni-Tech client work. DM Sans and M
 
 ## Verification
 
-Browser checks cover all six pages at 1440, 1024, 768, 390 and 320 pixels, including page overflow and primary headings. Playground checks cover editing, concepts, palette, type, layout, services, screen size, persistence, reset, download and contact handoff. Contact success and failure are checked using intercepted responses; no automated message is sent to the live endpoint. Mobile navigation and the no-JavaScript fallback are checked separately.
+Browser checks cover all seven pages at 1440, 1024, 768, 390 and 320 pixels, including page overflow and primary headings. Playground checks cover editing, concepts, palette, type, layout, services, screen size, persistence, reset, download and contact handoff. Contact success and failure are checked using intercepted responses; no automated message is sent to the live endpoint. Mobile navigation and the no-JavaScript fallback are checked separately.
 
 This redesign is local. It has not been committed, pushed or deployed.
+
+## Featured websites and portfolio
+
+The homepage showcases Impact Scaffolding, Ross Services and Julie Martin Fine Art using the screenshots provided by Uni-Tech, optimised as local WebP images in `images/portfolio/`. Each preview opens its supplied live website URL in a new tab. Portfolio navigation and hero links lead to `portfolio.html`. The full project directory lives on that page, with short homepage links at the old `#portfolio` and `#designs` anchors.
+
+`js/portfolio.js` adds previous/next controls, position status and keyboard navigation to the native horizontal scroll area. Touch/trackpad scrolling and links work without JavaScript. Cards snap into full view, the endpoints remain reachable, and motion respects reduced-motion preferences. Preview screenshots are static: replace their images when the featured sites change. The design playground remains a separate customisation tool.
+
+## Services and pricing
+
+Website services now list concrete scopes, revision limits and starting prices: one-page websites £495, business websites £995, redesigns £595 and website care £35/month. Additional pages start at £100; one-off updates are £60/hour. The owner authorised choosing the rates in this chat. The enquiry form can preselect both the service and package from service-card links. Hosting, domain registration and paid third-party services are separate; the final written quote confirms scope and any applicable VAT.
+
+The detailed offers live in `services.html`, with package labels in `contact.html` and a price answer in the homepage FAQ. Update those when rates change. The homepage links to the services page instead of duplicating its cards. `css/services.css` styles the pricing cards; `css/portfolio.css` styles the dedicated project directory. Site-wide marketing copy has been revised to use direct descriptions of services and deliverables.
+
+## Layout corrections
+
+The homepage design illustration uses separate areas for the heading and photograph. Its typography and colour samples are arranged below the preview on phones so they remain readable. A malformed font-import remnant was removed from the shared stylesheet, and preview layout controls now target buttons only. Navigation links throughout the site point to the dedicated portfolio and service pages.

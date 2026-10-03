@@ -62,7 +62,9 @@ window.addEventListener('hashchange', () => {
 const form = document.querySelector('#contact-form');
 if (form) {
   const service = new URLSearchParams(location.search).get('service');
-  if (Object.hasOwn(recommendations, service)) form.elements.service.value = service;
+  if ([...form.elements.service.options].some(option => option.value === service)) form.elements.service.value = service;
+  const packageName = new URLSearchParams(location.search).get('package');
+  if (form.elements.package && [...form.elements.package.options].some(option => option.value === packageName)) form.elements.package.value = packageName;
   form.addEventListener('submit', async event => {
     event.preventDefault();
     if (!form.reportValidity() || form.dataset.sending === 'true') return;
