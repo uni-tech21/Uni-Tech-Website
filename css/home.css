@@ -22,6 +22,11 @@
 .cinema-message .cinema-button{background:#10152c;color:#fff;font-size:clamp(11px,3cqi,13px);padding:clamp(12px,3.6cqi,20px) clamp(18px,6cqi,32px);min-width:0;min-height:44px;flex-shrink:0}
 .cinema-message .cinema-button:hover{background:#293354;color:#fff}
 .cinema-message p{font-size:clamp(12px,3.8cqi,17px);line-height:1.5;color:#252940;margin:clamp(12px,3cqi,20px) 0 0;font-weight:400;max-width:32ch}
+/* Raised lettering follows the artwork's light from the upper left. */
+.cinema-message h1{text-shadow:.025em .04em .025em #592d2824,.1em .14em .09em #592d2838}
+.cinema-message p{text-shadow:.04em .07em .08em #592d2824}
+.cinema-message .cinema-button{box-shadow:1px 2px 2px #592d2830,clamp(3px,.7cqi,5px) clamp(5px,1.2cqi,8px) clamp(7px,1.8cqi,12px) #592d2840}
+.cinema-message .cinema-button:hover{box-shadow:1px 3px 3px #592d2830,clamp(4px,.9cqi,6px) clamp(7px,1.6cqi,11px) clamp(9px,2.2cqi,15px) #592d2840}
 .design-home #main-nav>a[aria-current=page]:after{background:#fff}
 .cinema-showcase{position:relative;display:grid;grid-template-columns:34vw 46vw 34vw;gap:3.1vw;align-items:start;left:50%;transform:translateX(-50%);width:max-content;margin-top:82px;padding-bottom:55px}
 .showcase-card{display:block;box-shadow:0 30px 60px #0003;border-radius:8px;overflow:hidden;transition:transform .35s;outline-offset:7px}

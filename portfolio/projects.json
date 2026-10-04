@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Ross Services",
+    "url": "https://uni-tech21.github.io/Ross-Services/",
+    "image": "../images/portfolio/ross.webp",
+    "id": "ross",
+    "alt": "Ross Services homepage with a dark design, orange accents and four gaming service cards",
+    "width": 1800,
+    "height": 970,
+    "category": "SERVICE WEBSITE",
+    "description": "A gaming services website with individual service details, frequently asked questions and contact options.",
+    "features": ["Service pages", "Frequently asked questions", "Enquiries"],
+    "portfolioOrder": 2
+  },
+  {
+    "name": "Impact Scaffolding",
+    "url": "https://uni-tech21.github.io/IMPACT-Scaffolding/public/index.html",
+    "image": "../images/portfolio/impact.webp",
+    "id": "impact",
+    "alt": "Impact Scaffolding homepage with a navy and pink design and scaffolding project photograph",
+    "width": 1800,
+    "height": 970,
+    "category": "TRADE BUSINESS",
+    "description": "A website for an East Sussex scaffolding company, with services, recent work and quote enquiries.",
+    "features": ["Service information", "Project gallery", "Quote enquiries"],
+    "initial": true,
+    "portfolioOrder": 1
+  },
+  {
+    "name": "Julie Martin Fine Art",
+    "url": "https://uni-tech21.github.io/julie-fineart/",
+    "image": "../images/portfolio/julie.webp",
+    "id": "julie",
+    "alt": "Julie Martin Fine Art homepage with an illustrated artist logo and introduction",
+    "width": 1800,
+    "height": 970,
+    "category": "ARTIST PORTFOLIO",
+    "description": "An artist’s portfolio with an artwork gallery, biography and contact page for commissions and enquiries.",
+    "features": ["Artwork gallery", "Artist biography", "Contact page"],
+    "portfolioOrder": 3
+  }
+]
