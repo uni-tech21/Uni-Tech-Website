@@ -5,19 +5,24 @@ A static website focused on website design for independent businesses in Kent an
 ## Pages
 
 - `index.html`: website-design homepage, scrollable featured websites, links to dedicated portfolio and services pages, process, approach and FAQs.
-- `websites.html`: interactive design playground.
+- `websites.html`: website editor with three complete starter sites, editable content, section controls and working page previews.
+- `builder-preview.html`: isolated, responsive website preview used inside the editor.
 - `portfolio.html`: clickable live projects for Impact Scaffolding, Ross Services and Julie Martin Fine Art.
 - `services.html`: new website design, redesign and website care, with included work and starting prices.
 - `contact.html`: website enquiry form, including a visitor’s playground brief when supplied.
 - `thank-you.html` and `404.html`: confirmation and missing-page views.
 
-`css/site.css` provides shared foundations; `css/design.css` contains the shared visual direction; `css/home.css` gives the homepage its full-width photographic hero, layered concept previews and larger image-led sections. `js/site.js` handles navigation and contact submission; `js/design.js` handles the playground. Earlier assets and unused scripts remain in the repository but are not loaded by these pages.
+`css/site.css` provides shared foundations; `css/design.css` contains the shared visual direction; `css/home.css` gives the homepage its full-width photographic hero, layered concept previews and larger image-led sections. `js/site.js` handles navigation and contact submission; `js/design.js` handles the editor and design brief handoff. Earlier assets and unused scripts remain in the repository but are not loaded by these pages.
 
-## Design playground
+## Website editor
 
-Visitors can choose a studio, barber, café or trades concept, customise their business name and headline, pick one of four palettes, change typography and layout, toggle a services section and preview a phone-sized layout. These are illustrative concepts, not customer projects or a self-service publishing platform.
+The editor provides three distinct starter sites: an interiors studio, a local trades business and a neighbourhood café. Each has navigable Home, Services/Menu, About and Contact pages, with a scrolling website preview independent from the editor interface. The example businesses, menu prices and opening hours are illustrative.
 
-Changes save locally in the visitor’s browser when storage is available. Opening a direct concept link starts that concept fresh; opening the playground without a concept restores the saved design. Reset restores the defaults. A text design brief can be downloaded. “Send this design” includes the current design in the contact URL, where the choices appear in a read-only field and are submitted with the enquiry. Inputs are bounded and inserted as text. No design is sent to Uni-Tech until the visitor submits the contact form.
+Visitors can edit text directly in the site or through the Content panel. The Design panel changes colours, typography, the hero layout and photograph. The Sections panel reorders and hides optional homepage sections. Header/intro and contact remain included. Dedicated pages remain available when a homepage section is hidden. Preview mode removes editing controls from the rendered website. Desktop, tablet and mobile modes set the frame’s real layout width; Expand provides a larger view. Undo/redo preserves recent changes in the current session.
+
+Each template keeps a separate local draft in `unitech-site-drafts-v2`. Existing v1 design data is migrated where possible. Photo uploads accept JPG, PNG and WebP up to 10 MB and are resized locally before saving; images are not uploaded. Storage errors are reported clearly. Template resets can be undone. A text brief downloads from the current draft. “Send to Uni-Tech” includes validated text, design settings and section order in the contact URL. Uploaded image data is excluded from that URL, and the brief asks visitors to provide the original photo separately.
+
+`js/builder-state.js` defines shared defaults, field limits, validation and brief generation. `js/design.js` handles the editor and contact brief handoff. The preview uses `js/builder-preview.js` and `css/builder-preview.css`, communicating only with its own parent window. Text is inserted with `textContent`; inline paste is plain text. Preview contact forms are local demonstrations and do not send messages. This creates a design brief, not a published website.
 
 ## Contact
 
@@ -38,13 +43,13 @@ These images are design-preview imagery, not Uni-Tech client work. DM Sans and M
 
 Browser checks cover all seven pages at 1440, 1024, 768, 390 and 320 pixels, including page overflow and primary headings. Playground checks cover editing, concepts, palette, type, layout, services, screen size, persistence, reset, download and contact handoff. Contact success and failure are checked using intercepted responses; no automated message is sent to the live endpoint. Mobile navigation and the no-JavaScript fallback are checked separately.
 
-This redesign is local. It has not been committed, pushed or deployed.
+Edits can be reviewed locally before publication through the existing hosting workflow.
 
 ## Featured websites and portfolio
 
 The homepage showcases Impact Scaffolding, Ross Services and Julie Martin Fine Art using the screenshots provided by Uni-Tech, optimised as local WebP images in `images/portfolio/`. Each preview opens its supplied live website URL in a new tab. Portfolio navigation and hero links lead to `portfolio.html`. The full project directory lives on that page, with short homepage links at the old `#portfolio` and `#designs` anchors.
 
-`js/portfolio.js` adds previous/next controls, position status and keyboard navigation to the native horizontal scroll area. Touch/trackpad scrolling and links work without JavaScript. Cards snap into full view, the endpoints remain reachable, and motion respects reduced-motion preferences. Preview screenshots are static: replace their images when the featured sites change. The design playground remains a separate customisation tool.
+`js/portfolio.js` adds previous/next controls, position status and keyboard navigation to the native horizontal scroll area. Touch/trackpad scrolling and links work without JavaScript. Cards snap into full view, the endpoints remain reachable, and motion respects reduced-motion preferences. Preview screenshots are static: replace their images when the featured sites change. The website editor remains a separate customisation tool.
 
 ## Services and pricing
 
