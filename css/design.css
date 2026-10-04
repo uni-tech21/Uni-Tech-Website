@@ -5,5 +5,25 @@
 @media(max-width:450px){.hero-heading h1{font-size:49px}.hero-canvas{padding:17px 15px 55px}.canvas-label{margin:0 0 18px}.hero-canvas .mock-nav{padding:12px}.hero-canvas .mock-nav b{font-size:9px}.hero-canvas .mock-nav>span{font-size:5px}.hero-canvas .mock-copy{padding:17px 12px}.hero-canvas .mock-eyebrow{font-size:5px}.hero-canvas .mock-body h3{font-size:27px}.hero-canvas .mock-body p{font-size:8px}.hero-canvas .mock-cta{font-size:6px;padding:9px}.hero-canvas .mock-body img{min-height:205px}.hero-canvas .mock-bottom{padding:12px;font-size:6px}.floating-palette{bottom:25px}.canvas-link{left:16px;bottom:17px;font-size:9px}.concept-preview{padding:20px 15px}.concept-preview .mock-body h3{font-size:30px}.concept-preview .mock-copy{padding:17px 12px}.concept-preview .mock-nav b{font-size:9px}.concept-preview .mock-nav>span{font-size:5px}.type-art{padding:28px;min-height:350px}.type-art>span{font-size:61px}.art-star{font-size:87px;top:104px}.art-pills span{padding:7px 12px;font-size:10px}.hero-heading .button{font-size:13px}.footer-email{font-size:14px}.live-website .mock-nav b{font-size:10px}.live-website .mock-nav>span{font-size:6px}.preview-toolbar{font-size:8px}.preview-toolbar button{padding:7px 9px}.form-row{grid-template-columns:1fr}.contact-form-card{padding:20px}.contact-copy h1{font-size:55px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 /* Keep form controls compact and navigation usable without scripting. */
+/* Five navigation links need the compact menu on smaller tablets too. */
+@media(min-width:901px){
+  .site-header nav#main-nav>a{white-space:nowrap}
+}
+@media(min-width:801px) and (max-width:900px){
+  .site-header .menu-toggle{display:flex;align-items:center;gap:12px;padding:8px 13px;border:1px solid var(--line);border-radius:3px;background:transparent;color:inherit;font-size:12px}
+  .site-header nav#main-nav{display:none;position:absolute;inset:100% 0 auto;align-items:stretch;gap:12px;padding:24px;background:var(--paper);border-bottom:1px solid var(--line);box-shadow:0 20px 20px #27332610}
+  .site-header nav#main-nav.is-open{display:flex;flex-direction:column}
+  .site-header nav#main-nav>a{padding:12px;white-space:nowrap}
+  .site-header nav#main-nav>a[aria-current=page]:after{display:none}
+  .design-home .site-header .menu-toggle{border-color:#ffffff80;background:#0002}
+  .design-home .site-header nav#main-nav{background:#20201f;color:#fff}
+  .design-home .site-header nav#main-nav .nav-cta{align-self:start;margin:8px 0 0;padding:18px 26px}
+  html:not(.js) .site-header .menu-toggle{display:none}
+  html:not(.js) .site-header .nav-wrap{height:auto;padding-block:20px;flex-wrap:wrap}
+  html:not(.js) .site-header nav#main-nav{display:flex;position:static;flex-direction:row;flex-wrap:wrap;align-items:center;gap:14px;width:100%;padding:12px 0 0;border:0;box-shadow:none}
+  html:not(.js) .site-header nav#main-nav>a{font-size:12px}
+  html:not(.js) .design-home .site-header{position:relative;background:#20201f}
+  html:not(.js) .design-home .site-header nav#main-nav{background:transparent}
+}
 .builder-controls textarea{min-height:76px}.builder-controls .check-label input{width:18px;height:18px;min-height:18px;flex:0 0 18px;padding:0;margin:0;border-radius:0}.step-number{border:0;margin-bottom:15px}.preview-jump{display:none}
 @media(max-width:800px){html:not(.js) .menu-toggle{display:none}html:not(.js) .nav-wrap{height:auto;padding-block:20px;flex-wrap:wrap}html:not(.js) #main-nav{display:flex;position:static;flex-wrap:wrap;padding:12px 0 0;box-shadow:none;border:0;width:100%}html:not(.js) #main-nav a{font-size:12px}.builder-controls input:not([type=checkbox]),.builder-controls select,.builder-controls textarea{font-size:16px}.preview-jump{display:block;margin-top:15px;font-size:12px;text-decoration:underline}.builder-controls .check-label{font-size:12px}}

@@ -7,6 +7,7 @@ A static website focused on website design for independent businesses in Kent an
 - `index.html`: website-design homepage, scrollable featured websites, links to dedicated portfolio and services pages, process, approach and FAQs.
 - `websites.html`: website editor with three complete starter sites, editable content, section controls and working page previews.
 - `builder-preview.html`: isolated, responsive website preview used inside the editor.
+- `about.html`: introduces Paris, Callum and the wider computer networking team.
 - `portfolio.html`: clickable live projects for Impact Scaffolding, Ross Services and Julie Martin Fine Art.
 - `services.html`: new website design, redesign and website care, with included work and starting prices.
 - `contact.html`: website enquiry form, including a visitor’s playground brief when supplied.
@@ -30,18 +31,18 @@ The existing `enquires@uni-tech.co.uk` address and `https://formspree.io/f/xykdy
 
 ## Assets
 
-Photography is saved locally in `images/design/` from Unsplash:
+Images are saved locally in `images/design/`. Photography comes from Unsplash; the homepage uses user-provided artwork:
 
 - Interior: https://images.unsplash.com/photo-1600210492486-724fe5c67fb0
 - Café: https://images.unsplash.com/photo-1442512595331-e89e73853f31
-- Barber hero: https://images.unsplash.com/photo-1503951914875-452162b0f3f1
+- Homepage hero: user-provided artwork in `images/design/barber.jpg`
 - Barber detail: https://images.unsplash.com/photo-1599351431202-1e0f0137899a
 
-These images are design-preview imagery, not Uni-Tech client work. DM Sans and Manrope are self-hosted in `font/design/`, with their SIL Open Font License files, to avoid a remote font stylesheet delaying the site. The illustrative compositions and page design are original; Squarespace was the visual reference.
+These images are design-preview imagery, not Uni-Tech client work. The homepage artwork is framed independently of the portfolio carousel. Its front face and the hero text share responsive dimensions so the content stays within the block on desktop and mobile. DM Sans and Manrope are self-hosted in `font/design/`, with their SIL Open Font License files, to avoid a remote font stylesheet delaying the site. The illustrative compositions and page design are original; Squarespace was the visual reference.
 
 ## Verification
 
-Browser checks cover all seven pages at 1440, 1024, 768, 390 and 320 pixels, including page overflow and primary headings. Playground checks cover editing, concepts, palette, type, layout, services, screen size, persistence, reset, download and contact handoff. Contact success and failure are checked using intercepted responses; no automated message is sent to the live endpoint. Mobile navigation and the no-JavaScript fallback are checked separately.
+Browser checks cover the public pages at 1440, 1024, 768, 390 and 320 pixels, including page overflow and primary headings. Playground checks cover editing, concepts, palette, type, layout, services, screen size, persistence, reset, download and contact handoff. Contact success and failure are checked using intercepted responses; no automated message is sent to the live endpoint. Mobile navigation and the no-JavaScript fallback are checked separately.
 
 Edits can be reviewed locally before publication through the existing hosting workflow.
 

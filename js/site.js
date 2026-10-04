@@ -16,7 +16,7 @@ menu?.addEventListener('click', () => {
 nav?.addEventListener('click', event => { if (event.target.closest('a')) closeMenu(); });
 document.addEventListener('click', event => { if (!event.target.closest('.site-header')) closeMenu(); });
 document.addEventListener('keydown', event => { if (event.key === 'Escape' && nav?.classList.contains('is-open')) closeMenu(true); });
-window.matchMedia('(min-width: 801px)').addEventListener('change', () => closeMenu());
+window.matchMedia('(min-width: 901px)').addEventListener('change', () => closeMenu());
 document.querySelectorAll('[data-year]').forEach(el => el.textContent = new Date().getFullYear());
 
 const recommendations = {
