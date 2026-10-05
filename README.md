@@ -5,7 +5,7 @@ A static website focused on website design for independent businesses in Kent an
 ## Pages
 
 - `index.html`: website-design homepage, scrollable featured websites, links to dedicated portfolio and services pages, process, approach and FAQs.
-- `websites.html`: website editor with three complete starter sites, editable content, section controls and working page previews.
+- `websites.html`: template selection followed by the website editor, with editable content, section controls and working page previews.
 - `builder-preview.html`: isolated, responsive website preview used inside the editor.
 - `about.html`: introduces Paris, Callum and the wider computer networking team.
 - `portfolio.html`: clickable live projects for Impact Scaffolding, Ross Services and Julie Martin Fine Art.
@@ -18,6 +18,8 @@ A static website focused on website design for independent businesses in Kent an
 ## Website editor
 
 The editor provides three distinct starter sites: an interiors studio, a local trades business and a neighbourhood café. Each has navigable Home, Services/Menu, About and Contact pages, with a scrolling website preview independent from the editor interface. The example businesses, menu prices and opening hours are illustrative.
+
+“Build your own” opens the template selection page first. Each card offers a read-only preview of the complete template, including its pages and desktop/mobile layouts. Choosing a template opens the editor; a saved draft is resumed when available. “Browse templates” returns to the selection page without clearing changes. Browsing previews does not create or alter drafts. A `?template=studio`, `?template=trades` or `?template=cafe` URL opens that template directly so a reload keeps the editor open; browser Back and Forward move between selection and editing.
 
 Visitors can edit text directly in the site or through the Content panel. The Design panel changes colours, typography, the hero layout and photograph. The Sections panel reorders and hides optional homepage sections. Header/intro and contact remain included. Dedicated pages remain available when a homepage section is hidden. Preview mode removes editing controls from the rendered website. Desktop, tablet and mobile modes set the frame’s real layout width; Expand provides a larger view. Undo/redo preserves recent changes in the current session.
 

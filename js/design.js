@@ -12,14 +12,20 @@
   const form=document.getElementById('design-controls');
   const frame=document.getElementById('site-preview');
   const viewport=document.getElementById('preview-viewport');
+  const selection=document.getElementById('template-selection');
+  const editorStage=document.getElementById('editor-stage');
+  const templatePreview=document.getElementById('template-preview-dialog');
+  const templateFrame=document.getElementById('template-preview-frame');
+  const templateViewport=document.getElementById('template-preview-viewport');
   const storageKey='unitech-site-drafts-v2';
   const labels={hero:'Header & introduction',services:'Services / menu',about:'About',gallery:'Photos',contact:'Contact'};
   const fieldLabels={business:'Business name',eyebrow:'Short heading above the title',headline:'Homepage heading',intro:'Introduction',cta:'Button text',aboutTitle:'About heading',aboutText:'About your business',contactTitle:'Contact heading',address:'Address or service area',phone:'Phone number',email:'Email address'};
   let drafts={},lastTemplate='studio';
+  const persistentDrafts=new Set();
   try {
     const saved=JSON.parse(localStorage.getItem(storageKey));
     if(saved && typeof saved==='object') {
-      for(const key of Object.keys(api.templates)) if(saved.drafts?.[key]) drafts[key]=api.validate(saved.drafts[key]);
+      for(const key of Object.keys(api.templates)) if(saved.drafts?.[key]) {drafts[key]=api.validate(saved.drafts[key]);persistentDrafts.add(key);}
       if(Object.hasOwn(api.templates,saved.lastTemplate)) lastTemplate=saved.lastTemplate;
     } else {
       const legacy=JSON.parse(localStorage.getItem('unitech-design-v1'));
@@ -27,7 +33,7 @@
         const migrated=api.validate(legacy);const defaults=api.makeDefault(migrated.template);
         if(!migrated.business.trim()) migrated.business=defaults.business;
         if(!migrated.headline.trim()) migrated.headline=defaults.headline;
-        drafts[migrated.template]=migrated;lastTemplate=migrated.template;
+        drafts[migrated.template]=migrated;lastTemplate=migrated.template;persistentDrafts.add(migrated.template);
       }
     }
   } catch { /* Saving is optional; the editor remains available. */ }
@@ -37,14 +43,19 @@
   const view={page:'home',mode:'edit',selected:'hero',screen:innerWidth<801?'mobile':'desktop'};
   let history=[JSON.stringify(draft)],historyIndex=0;
   let currentPanel='content',ready=false,resizeFrame,expanded=false,focusBeforeExpand;
+  let previewTemplate='studio',previewPage='home',previewScreen='desktop',templateReady=false,resizeTemplateFrame;
   const clone=value=>JSON.parse(JSON.stringify(value));
   function send() {
     if(ready) frame.contentWindow.postMessage({type:'unitech:render',draft,view},location.origin);
   }
+  function requestReady(target) {
+    target.contentWindow.postMessage({type:'unitech:request-ready'},location.origin);
+  }
   function fitFrame() {
     cancelAnimationFrame(resizeFrame);
     resizeFrame=requestAnimationFrame(()=>{
-      const available=Math.max(1,viewport.clientWidth);
+      if(editorStage.hidden||!viewport.clientWidth) return;
+      const available=viewport.clientWidth;
       const width=view.screen==='desktop'?1100:view.screen==='tablet'?768:Math.min(390,available);
       const scale=Math.min(1,available/width);
       const height=viewport.clientHeight;
@@ -56,8 +67,76 @@
     drafts[draft.template]=clone(draft);
     let saved=false;
     try{localStorage.setItem(storageKey,JSON.stringify({lastTemplate:draft.template,drafts}));saved=true;}catch{ /* Quota/private mode must not report a successful save. */ }
+    if(saved) {persistentDrafts.clear();Object.keys(drafts).forEach(key=>persistentDrafts.add(key));}
+    else persistentDrafts.delete(draft.template);
     document.getElementById('save-status').textContent=saved?'Saved in this browser':'Download your brief to keep a copy';
     document.getElementById('storage-note').textContent=saved?'Your drafts are saved on this device. Send the design brief to Uni-Tech when you’re ready to discuss the build.':'This browser could not save your draft. Download the brief before leaving, or send it to Uni-Tech for review.';
+    syncSelection();
+  }
+  function syncSelection() {
+    document.querySelectorAll('[data-template-draft]').forEach(label=>{
+      const key=label.dataset.templateDraft;label.hidden=!drafts[key];
+      label.textContent=persistentDrafts.has(key)?'Saved draft on this device':'Draft in this session';
+    });
+    document.querySelectorAll('[data-template]').forEach(button=>{
+      const key=button.dataset.template;button.textContent=drafts[key]?'Continue draft':'Use this template';
+      button.setAttribute('aria-label',`${button.textContent}: ${api.templates[key].label}`);
+    });
+    document.querySelectorAll('[data-template-preview]').forEach(button=>button.setAttribute('aria-label',`Preview template: ${api.templates[button.dataset.templatePreview].label}`));
+  }
+  function stageUrl(template) {
+    const url=new URL(location.href);
+    url.searchParams.delete('concept');url.searchParams.delete('template');url.hash='';
+    if(template) url.searchParams.set('template',template);
+    if(url.href!==location.href) window.history.pushState(null,'',url);
+  }
+  function showSelection({updateUrl=true,focus=true}={}) {
+    if(templatePreview.open) templatePreview.close();
+    if(expanded) toggleExpand();
+    editorStage.hidden=true;selection.hidden=false;syncSelection();
+    if(updateUrl) stageUrl();
+    if(focus) {document.getElementById('template-selection-title').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}
+  }
+  function openEditor(template,{updateUrl=true,focus=true}={}) {
+    if(!Object.hasOwn(api.templates,template)) return;
+    if(templatePreview.open) templatePreview.close();
+    if(template!==draft.template) switchTemplate(template);
+    else save();
+    selection.hidden=true;editorStage.hidden=false;
+    if(updateUrl) stageUrl(template);
+    requestReady(frame);send();fitFrame();
+    if(focus) {document.getElementById('editor-stage-title').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}
+  }
+  function sendTemplatePreview() {
+    if(templateReady&&templatePreview.open) templateFrame.contentWindow.postMessage({type:'unitech:render',draft:api.makeDefault(previewTemplate),view:{page:previewPage,mode:'preview',selected:'hero',resetScroll:true}},location.origin);
+  }
+  function fitTemplateFrame() {
+    cancelAnimationFrame(resizeTemplateFrame);
+    resizeTemplateFrame=requestAnimationFrame(()=>{
+      if(!templatePreview.open||!templateViewport.clientWidth) return;
+      const available=templateViewport.clientWidth;
+      const width=previewScreen==='desktop'?1100:Math.min(390,available);
+      const scale=Math.min(1,available/width);
+      templateFrame.style.width=`${width}px`;templateFrame.style.height=`${templateViewport.clientHeight/scale}px`;templateFrame.style.transform=`scale(${scale})`;
+      document.getElementById('template-preview-frame-wrap').style.width=`${width*scale}px`;
+    });
+  }
+  function setTemplatePreviewPage(page) {
+    if(!['home','services','about','contact'].includes(page)) return;
+    previewPage=page;document.getElementById('template-preview-page').value=page;
+    const label=page==='services'&&previewTemplate==='cafe'?'Menu':page[0].toUpperCase()+page.slice(1);
+    templateFrame.title=`${api.templates[previewTemplate].label} template: ${label} page`;
+    sendTemplatePreview();
+  }
+  function openTemplatePreview(template) {
+    if(!Object.hasOwn(api.templates,template)) return;
+    previewTemplate=template;previewScreen=innerWidth<801?'mobile':'desktop';
+    document.getElementById('template-preview-title').textContent=api.templates[template].label;
+    document.getElementById('template-preview-page').options[1].textContent=template==='cafe'?'Menu':'Services';
+    document.getElementById('use-preview-template').textContent=drafts[template]?'Continue your draft':'Use this template';
+    document.querySelectorAll('[data-template-screen]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.templateScreen===previewScreen)));
+    templatePreview.showModal();document.body.style.overflow='hidden';
+    requestReady(templateFrame);setTemplatePreviewPage('home');fitTemplateFrame();
   }
   function historyButtons() {
     document.getElementById('undo-draft').disabled=historyIndex===0;
@@ -149,7 +228,6 @@
     form.querySelectorAll('[data-layout]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.layout===draft.layout)));
     document.getElementById('template-name').textContent=api.templates[draft.template].label;
     document.getElementById('preview-page').options[1].textContent=draft.template==='cafe'?'Menu':'Services';
-    document.querySelectorAll('[data-template]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.template===draft.template)));
     document.querySelectorAll('[data-photo]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.photoScope==='gallery'?!draft.galleryImageData&&button.dataset.photo===draft.galleryImage:!draft.imageData&&button.dataset.photo===draft.image)));
   }
   function setPanel(panel,focus=false) {
@@ -180,7 +258,6 @@
     history=[JSON.stringify(draft)];historyIndex=0;
     view.page='home';view.selected='hero';
     document.getElementById('edit-section').value='hero';
-    document.getElementById('template-dialog').close();
     setPanel('content');renderFields();renderSections();photoControls(document.getElementById('design-photo-controls'),'design');syncControls();historyButtons();save();updateLink();setPage('home');
     document.getElementById('design-status').textContent=`${api.templates[template].label} draft loaded.`;
   }
@@ -246,9 +323,22 @@
     view.screen=button.dataset.screen;document.querySelectorAll('[data-screen]').forEach(control=>control.setAttribute('aria-pressed',String(control===button)));fitFrame();
   }));
   document.getElementById('preview-page').addEventListener('change',event=>setPage(event.target.value));
-  document.getElementById('choose-template').addEventListener('click',()=>document.getElementById('template-dialog').showModal());
-  document.getElementById('close-templates').addEventListener('click',()=>document.getElementById('template-dialog').close());
-  document.querySelectorAll('[data-template]').forEach(button=>button.addEventListener('click',()=>switchTemplate(button.dataset.template)));
+  document.getElementById('choose-template').addEventListener('click',()=>showSelection());
+  document.getElementById('back-to-templates').addEventListener('click',()=>showSelection());
+  document.querySelectorAll('[data-template]').forEach(button=>button.addEventListener('click',()=>openEditor(button.dataset.template)));
+  document.querySelectorAll('[data-template-preview]').forEach(button=>button.addEventListener('click',()=>openTemplatePreview(button.dataset.templatePreview)));
+  document.getElementById('close-template-preview').addEventListener('click',()=>templatePreview.close());
+  templatePreview.addEventListener('close',()=>{document.body.style.overflow=expanded?'hidden':'';});
+  document.getElementById('use-preview-template').addEventListener('click',()=>openEditor(previewTemplate));
+  document.getElementById('template-preview-page').addEventListener('change',event=>setTemplatePreviewPage(event.target.value));
+  document.querySelectorAll('[data-template-screen]').forEach(button=>button.addEventListener('click',()=>{
+    previewScreen=button.dataset.templateScreen;document.querySelectorAll('[data-template-screen]').forEach(control=>control.setAttribute('aria-pressed',String(control===button)));fitTemplateFrame();
+  }));
+  window.addEventListener('popstate',()=>{
+    const query=new URLSearchParams(location.search),template=query.get('template')||query.get('concept');
+    if(Object.hasOwn(api.templates,template)) openEditor(template,{updateUrl:false});
+    else showSelection({updateUrl:false});
+  });
   document.getElementById('undo-draft').addEventListener('click',()=>undo(-1));document.getElementById('redo-draft').addEventListener('click',()=>undo(1));
   document.getElementById('reset-draft').addEventListener('click',()=>{commit(api.makeDefault(draft.template));renderFields();renderSections();photoControls(document.getElementById('design-photo-controls'),'design');document.getElementById('design-status').textContent='Template reset. Use Undo to restore your changes.';});
   function toggleExpand() {
@@ -264,9 +354,17 @@
     const blob=new Blob([api.brief(draft)],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),anchor=document.createElement('a');anchor.href=url;anchor.download='my-unitech-design-brief.txt';anchor.click();setTimeout(()=>URL.revokeObjectURL(url),1000);document.getElementById('design-status').textContent='Design brief downloaded.';
   });
   window.addEventListener('message',event=>{
-    if(event.origin!==location.origin||event.source!==frame.contentWindow||!event.data)return;
+    if(event.origin!==location.origin||!event.data)return;
     const message=event.data;
+    if(event.source===templateFrame.contentWindow) {
+      if(message.type==='unitech:ready'){templateReady=true;sendTemplatePreview();fitTemplateFrame();}
+      if(message.type==='unitech:navigate') setTemplatePreviewPage(message.page);
+      if(message.type==='unitech:escape'&&templatePreview.open) templatePreview.close();
+      return;
+    }
+    if(event.source!==frame.contentWindow) return;
     if(message.type==='unitech:ready'){ready=true;send();fitFrame();}
+    if(editorStage.hidden) return;
     if(message.type==='unitech:navigate') setPage(message.page);
     if(message.type==='unitech:escape'&&expanded) toggleExpand();
     if(message.type==='unitech:select') selectSection(message.section,{fromFrame:true});
@@ -276,8 +374,12 @@
     }
   });
   frame.addEventListener('load',()=>{ready=true;send();fitFrame();});
+  templateFrame.addEventListener('load',()=>{templateReady=true;sendTemplatePreview();fitTemplateFrame();});
   new ResizeObserver(fitFrame).observe(viewport);
+  new ResizeObserver(fitTemplateFrame).observe(templateViewport);
   document.querySelectorAll('[data-screen]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.screen===view.screen)));
   editor.dataset.mode=view.mode;
-  renderFields();renderSections();photoControls(document.getElementById('design-photo-controls'),'design');syncControls();historyButtons();save();updateLink();setPage('home');fitFrame();
+  renderFields();renderSections();photoControls(document.getElementById('design-photo-controls'),'design');syncControls();historyButtons();syncSelection();updateLink();setPage('home');
+  if(Object.hasOwn(api.templates,requested)) openEditor(requested,{updateUrl:false,focus:false});
+  else showSelection({updateUrl:false,focus:false});
 })();

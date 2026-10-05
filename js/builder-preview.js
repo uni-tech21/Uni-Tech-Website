@@ -273,6 +273,7 @@
   });
   window.addEventListener('message',event => {
     if (event.origin !== location.origin || event.source !== parent || !event.data) return;
+    if (event.data.type === 'unitech:request-ready') {send({type:'unitech:ready'});return;}
     if (event.data.type === 'unitech:focus') {
       const id = event.data.section;
       if (!api.sectionIds.includes(id)) return;
@@ -292,7 +293,7 @@
     const changedPage = view.page !== nextPage;
     draft = api.validate(event.data.draft);
     view = {page:nextPage,mode:next.mode === 'preview' ? 'preview' : 'edit',selected:api.sectionIds.includes(next.selected) ? next.selected : view.selected};
-    render(changedPage);
+    render(changedPage || next.resetScroll === true);
   });
   render();
   send({type:'unitech:ready'});
