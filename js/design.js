@@ -17,15 +17,25 @@
   const templatePreview=document.getElementById('template-preview-dialog');
   const templateFrame=document.getElementById('template-preview-frame');
   const templateViewport=document.getElementById('template-preview-viewport');
+  const setup=document.getElementById('guided-setup');
+  const setupOrder=['business','colours','photo','review'];
+  const setupCopy={
+    business:{title:'Your business',description:'Add your business name and a heading for your homepage. You can keep the example text for now.',next:'Choose colours'},
+    colours:{title:'Website colours',description:'Choose a colour palette for your website.',next:'Choose a photograph'},
+    photo:{title:'Homepage photograph',description:'Use an example photograph or upload your own.',next:'Review website'},
+    review:{title:'Review your website',description:'Browse the pages and check the mobile view before sending your design brief.'}
+  };
+  const photoLabels={'interior.jpg':'Interior','cafe.jpg':'Café','barber.jpg':'Abstract','barber-detail.jpg':'Barber detail'};
   const storageKey='unitech-site-drafts-v2';
   const labels={hero:'Header & introduction',services:'Services / menu',about:'About',gallery:'Photos',contact:'Contact'};
   const fieldLabels={business:'Business name',eyebrow:'Short heading above the title',headline:'Homepage heading',intro:'Introduction',cta:'Button text',aboutTitle:'About heading',aboutText:'About your business',contactTitle:'Contact heading',address:'Address or service area',phone:'Phone number',email:'Email address'};
-  let drafts={},lastTemplate='studio';
+  let drafts={},setupProgress={},lastTemplate='studio';
   const persistentDrafts=new Set();
   try {
     const saved=JSON.parse(localStorage.getItem(storageKey));
     if(saved && typeof saved==='object') {
       for(const key of Object.keys(api.templates)) if(saved.drafts?.[key]) {drafts[key]=api.validate(saved.drafts[key]);persistentDrafts.add(key);}
+      for(const key of Object.keys(drafts)) if(setupOrder.includes(saved.setupSteps?.[key])) setupProgress[key]=saved.setupSteps[key];
       if(Object.hasOwn(api.templates,saved.lastTemplate)) lastTemplate=saved.lastTemplate;
     } else {
       const legacy=JSON.parse(localStorage.getItem('unitech-design-v1'));
@@ -40,13 +50,15 @@
   const requested=params.get('template')||params.get('concept');
   if(Object.hasOwn(api.templates,requested)) lastTemplate=requested;
   let draft=api.validate(drafts[lastTemplate]||api.makeDefault(lastTemplate));
-  const view={page:'home',mode:'edit',selected:'hero',screen:innerWidth<801?'mobile':'desktop'};
+  const view={page:'home',mode:'preview',selected:'hero',screen:innerWidth<801?'mobile':'desktop'};
   let history=[JSON.stringify(draft)],historyIndex=0;
   let currentPanel='content',ready=false,resizeFrame,expanded=false,focusBeforeExpand;
   let previewTemplate='studio',previewPage='home',previewScreen='desktop',templateReady=false,resizeTemplateFrame;
+  let setupStep='business',advanced=false,templateRevision=0;
+  const photoRequests={hero:0,gallery:0};
   const clone=value=>JSON.parse(JSON.stringify(value));
-  function send() {
-    if(ready) frame.contentWindow.postMessage({type:'unitech:render',draft,view},location.origin);
+  function send({resetScroll=false}={}) {
+    if(ready) frame.contentWindow.postMessage({type:'unitech:render',draft,view:{...view,resetScroll}},location.origin);
   }
   function requestReady(target) {
     target.contentWindow.postMessage({type:'unitech:request-ready'},location.origin);
@@ -66,11 +78,13 @@
   function save() {
     drafts[draft.template]=clone(draft);
     let saved=false;
-    try{localStorage.setItem(storageKey,JSON.stringify({lastTemplate:draft.template,drafts}));saved=true;}catch{ /* Quota/private mode must not report a successful save. */ }
+    try{localStorage.setItem(storageKey,JSON.stringify({lastTemplate:draft.template,drafts,setupSteps:setupProgress}));saved=true;}catch{ /* Quota/private mode must not report a successful save. */ }
     if(saved) {persistentDrafts.clear();Object.keys(drafts).forEach(key=>persistentDrafts.add(key));}
     else persistentDrafts.delete(draft.template);
     document.getElementById('save-status').textContent=saved?'Saved in this browser':'Download your brief to keep a copy';
     document.getElementById('storage-note').textContent=saved?'Your drafts are saved on this device. Send the design brief to Uni-Tech when you’re ready to discuss the build.':'This browser could not save your draft. Download the brief before leaving, or send it to Uni-Tech for review.';
+    const setupNote=document.getElementById('setup-save-note');
+    if(setupNote) setupNote.textContent=saved?'Your choices are saved on this device.':'Your choices are kept for this visit. Download the brief before leaving.';
     syncSelection();
   }
   function syncSelection() {
@@ -101,11 +115,58 @@
     if(!Object.hasOwn(api.templates,template)) return;
     if(templatePreview.open) templatePreview.close();
     if(template!==draft.template) switchTemplate(template);
-    else save();
     selection.hidden=true;editorStage.hidden=false;
+    setSetupStep(setupProgress[template]||'business',{focus:false});
     if(updateUrl) stageUrl(template);
     requestReady(frame);send();fitFrame();
-    if(focus) {document.getElementById('editor-stage-title').focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}
+    if(focus) {document.getElementById('setup-title').focus({preventScroll:true});setup.scrollIntoView({block:'start',behavior:'instant'});}
+  }
+  function syncSetupControls() {
+    setup.querySelectorAll('[data-setup-field]').forEach(input=>{if(document.activeElement!==input) input.value=draft[input.dataset.setupField];});
+    setup.querySelectorAll('[data-setup-colour]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.setupColour===draft.colour)));
+    setup.querySelectorAll('[data-setup-photo]').forEach(button=>button.setAttribute('aria-pressed',String(!draft.imageData&&button.dataset.setupPhoto===draft.image)));
+    document.getElementById('setup-photo-name').textContent=draft.imageData?`${draft.imageName||'Uploaded photograph'} selected`:`${photoLabels[draft.image]} example selected`;
+    document.getElementById('setup-photo-revert').hidden=!draft.imageData;
+    const summary=document.getElementById('setup-summary'),list=document.createElement('dl');summary.replaceChildren(list);
+    for(const [label,value] of [['Template',api.templates[draft.template].label],['Business',draft.business||'Example business'],['Colours',api.palettes[draft.colour].name],['Photograph',draft.imageData?(draft.imageName||'Your uploaded photograph'):`${photoLabels[draft.image]} example`]]) {
+      const row=document.createElement('div'),term=document.createElement('dt'),detail=document.createElement('dd');term.textContent=label;detail.textContent=value;row.append(term,detail);list.append(row);
+    }
+  }
+  function setEditorMode(mode) {
+    view.mode=mode;editor.dataset.mode=mode;
+    document.querySelectorAll('button[data-mode]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.mode===mode)));
+    document.getElementById('canvas-edit-hint').textContent=mode==='edit'?'Click text to edit':'Browse your website';
+  }
+  function setSetupStep(step,{focus=true,persist=true}={}) {
+    if(!setupOrder.includes(step)) return;
+    if(expanded) toggleExpand();
+    setupStep=step;advanced=false;setup.hidden=false;editor.dataset.guided='true';editor.dataset.setupCurrent=step;
+    document.getElementById('setup-return-review').hidden=true;
+    document.getElementById('setup-more-changes').setAttribute('aria-expanded','false');
+    setEditorMode('preview');
+    const index=setupOrder.indexOf(step),copy=setupCopy[step];
+    document.getElementById('setup-title').textContent=copy.title;document.getElementById('setup-description').textContent=copy.description;
+    document.getElementById('setup-step-count').textContent=`Step ${index+1} of ${setupOrder.length}`;
+    setup.querySelectorAll('[data-setup-panel]').forEach(panel=>{panel.hidden=panel.dataset.setupPanel!==step;});
+    setup.querySelectorAll('[data-setup-step]').forEach(button=>{
+      if(button.dataset.setupStep===step) button.setAttribute('aria-current','step');
+      else button.removeAttribute('aria-current');
+    });
+    const back=document.getElementById('setup-back');back.disabled=false;back.textContent=index===0?'Back to templates':'Back';
+    const next=document.getElementById('setup-next');next.hidden=step==='review';next.textContent=copy.next||'Continue';
+    const previewLink=document.getElementById('setup-view-preview');if(previewLink)previewLink.hidden=step==='review';
+    const backToChoices=document.getElementById('setup-back-to-choices');if(backToChoices)backToChoices.textContent=step==='review'?'Back to review':`Back to ${step==='business'?'your business':step==='photo'?'photograph':'colours'}`;
+    if(step!=='review') setPage('home');
+    syncSetupControls();send({resetScroll:step!=='review'});fitFrame();
+    if(persist){setupProgress[draft.template]=step;save();}
+    if(focus){document.getElementById('setup-title').focus({preventScroll:true});setup.scrollIntoView({block:'start',behavior:'instant'});}
+  }
+  function openAdvancedEditor() {
+    setupProgress[draft.template]='review';save();advanced=true;setup.hidden=true;editor.dataset.guided='false';
+    document.getElementById('setup-return-review').hidden=false;
+    document.getElementById('setup-more-changes').setAttribute('aria-expanded','true');
+    setEditorMode('edit');selectSection(view.page==='home'?'hero':view.page,{fromFrame:true});fitFrame();
+    document.getElementById('edit-section').focus({preventScroll:true});editor.scrollIntoView({block:'start',behavior:'instant'});
   }
   function sendTemplatePreview() {
     if(templateReady&&templatePreview.open) templateFrame.contentWindow.postMessage({type:'unitech:render',draft:api.makeDefault(previewTemplate),view:{page:previewPage,mode:'preview',selected:'hero',resetScroll:true}},location.origin);
@@ -157,6 +218,7 @@
   function undo(direction) {
     const index=historyIndex+direction;
     if(index<0||index>=history.length) return;
+    photoRequests.hero++;photoRequests.gallery++;
     historyIndex=index;draft=api.validate(JSON.parse(history[index]));save();updateLink();syncControls();renderFields();renderSections();photoControls(document.getElementById('design-photo-controls'),'design');historyButtons();send();
     document.getElementById('design-status').textContent=direction<0?'Last change undone.':'Change restored.';
   }
@@ -173,7 +235,7 @@
     const scope=suffix==='content'?'gallery':'hero',imageKey=scope==='gallery'?'galleryImage':'image',dataKey=scope==='gallery'?'galleryImageData':'imageData',nameKey=scope==='gallery'?'galleryImageName':'imageName';
     const title=document.createElement('h3');title.textContent=scope==='gallery'?'Gallery photograph':'Homepage photograph';host.append(title);
     const grid=document.createElement('div');grid.className='photo-choices';
-    const photos={'interior.jpg':'Interior','cafe.jpg':'Café','barber.jpg':'Barbershop','barber-detail.jpg':'Barber detail'};
+    const photos=photoLabels;
     for(const [filename,label] of Object.entries(photos)) {
       const button=document.createElement('button');button.type='button';button.dataset.photo=filename;button.dataset.photoScope=scope;button.setAttribute('aria-label',`Use ${label.toLowerCase()} photograph`);button.setAttribute('aria-pressed',String(!draft[dataKey]&&draft[imageKey]===filename));
       const img=document.createElement('img');img.src=`images/design/${filename}`;img.alt=label;button.append(img);grid.append(button);
@@ -229,6 +291,7 @@
     document.getElementById('template-name').textContent=api.templates[draft.template].label;
     document.getElementById('preview-page').options[1].textContent=draft.template==='cafe'?'Menu':'Services';
     document.querySelectorAll('[data-photo]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.photoScope==='gallery'?!draft.galleryImageData&&button.dataset.photo===draft.galleryImage:!draft.imageData&&button.dataset.photo===draft.image)));
+    syncSetupControls();
   }
   function setPanel(panel,focus=false) {
     if(!['content','design','sections'].includes(panel)) return;
@@ -254,18 +317,21 @@
   }
   function switchTemplate(template) {
     if(!Object.hasOwn(api.templates,template)) return;
+    templateRevision++;
     draft=api.validate(drafts[template]||api.makeDefault(template));
     history=[JSON.stringify(draft)];historyIndex=0;
     view.page='home';view.selected='hero';
     document.getElementById('edit-section').value='hero';
-    setPanel('content');renderFields();renderSections();photoControls(document.getElementById('design-photo-controls'),'design');syncControls();historyButtons();save();updateLink();setPage('home');
+    setPanel('content');renderFields();renderSections();photoControls(document.getElementById('design-photo-controls'),'design');syncControls();historyButtons();updateLink();setPage('home');
     document.getElementById('design-status').textContent=`${api.templates[template].label} draft loaded.`;
   }
   async function loadPhoto(file,scope='hero') {
     if(!file) return;
+    const request=++photoRequests[scope],revision=templateRevision;
     const status=document.getElementById('design-status');
-    if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>10*1024*1024) {status.textContent='Choose a JPG, PNG or WebP photograph smaller than 10 MB.';return;}
-    status.textContent='Preparing your photograph…';
+    const report=message=>{if(revision!==templateRevision||request!==photoRequests[scope])return;status.textContent=message;if(scope==='hero'&&!advanced)document.getElementById('setup-photo-name').textContent=message;};
+    if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>10*1024*1024) {report('Choose a JPG, PNG or WebP photograph smaller than 10 MB.');return;}
+    report('Preparing your photograph…');
     const url=URL.createObjectURL(file);
     try {
       const img=new Image();img.src=url;await img.decode();
@@ -276,11 +342,38 @@
       let imageData=canvas.toDataURL('image/jpeg',.82);
       if(imageData.length>700000) imageData=canvas.toDataURL('image/jpeg',.55);
       if(imageData.length>1000000) throw new Error('Image too large');
+      if(revision!==templateRevision||request!==photoRequests[scope]) return;
       commit({...draft,...(scope==='gallery'?{galleryImageData:imageData,galleryImageName:file.name}:{imageData,imageName:file.name})});
       photoControls(document.getElementById('design-photo-controls'),'design');if(view.selected==='gallery')renderFields();
-      status.textContent='Photograph added. Supply the original image separately with your enquiry.';
-    } catch {status.textContent='That image could not be opened. Please try another photograph.';} finally {URL.revokeObjectURL(url);}
+      report(`${file.name} selected. Supply the original separately with your enquiry.`);
+    } catch {report('That image could not be opened. Please try another photograph.');} finally {URL.revokeObjectURL(url);}
   }
+  setup.addEventListener('input',event=>{
+    const key=event.target.dataset.setupField;
+    if(!['business','headline'].includes(key)) return;
+    const value=event.target.value;commit({...draft,[key]:value.trim()?value:api.makeDefault(draft.template)[key]});
+  });
+  setup.addEventListener('focusout',event=>{
+    const key=event.target.dataset.setupField;
+    if(['business','headline'].includes(key)&&!event.target.value.trim()) event.target.value=draft[key];
+  });
+  setup.addEventListener('keydown',event=>{
+    if(event.key==='Enter'&&!event.isComposing&&event.target.dataset.setupField) {event.preventDefault();setSetupStep(setupOrder[setupOrder.indexOf(setupStep)+1]);}
+  });
+  setup.addEventListener('click',event=>{
+    const button=event.target.closest('button');if(!button)return;
+    if(button.dataset.setupStep) setSetupStep(button.dataset.setupStep);
+    if(button.dataset.setupColour) commit({...draft,colour:button.dataset.setupColour});
+    if(button.dataset.setupPhoto) {photoRequests.hero++;commit({...draft,image:button.dataset.setupPhoto,imageData:'',imageName:''});photoControls(document.getElementById('design-photo-controls'),'design');syncSetupControls();}
+  });
+  document.getElementById('setup-photo-upload').addEventListener('change',event=>{loadPhoto(event.target.files[0]);event.target.value='';});
+  document.getElementById('setup-photo-revert').addEventListener('click',()=>{photoRequests.hero++;commit({...draft,imageData:'',imageName:''});photoControls(document.getElementById('design-photo-controls'),'design');});
+  document.getElementById('setup-back').addEventListener('click',()=>{const index=setupOrder.indexOf(setupStep);if(index===0)showSelection();else setSetupStep(setupOrder[index-1]);});
+  document.getElementById('setup-next').addEventListener('click',()=>setSetupStep(setupOrder[setupOrder.indexOf(setupStep)+1]));
+  document.getElementById('setup-more-changes').addEventListener('click',openAdvancedEditor);
+  document.getElementById('setup-return-review').addEventListener('click',()=>setSetupStep('review'));
+  document.getElementById('setup-view-preview')?.addEventListener('click',()=>{frame.focus({preventScroll:true});document.getElementById('your-preview').scrollIntoView({block:'start',behavior:'instant'});});
+  document.getElementById('setup-back-to-choices')?.addEventListener('click',()=>{document.getElementById('setup-title').focus({preventScroll:true});setup.scrollIntoView({block:'start',behavior:'instant'});});
   form.addEventListener('submit',event=>event.preventDefault());
   form.addEventListener('input',event=>{
     const key=event.target.name;
@@ -297,8 +390,8 @@
     const button=event.target.closest('button');if(!button)return;
     if(button.dataset.colour) commit({...draft,colour:button.dataset.colour});
     if(button.dataset.layout) commit({...draft,layout:button.dataset.layout});
-    if(button.dataset.photo) {commit({...draft,...(button.dataset.photoScope==='gallery'?{galleryImage:button.dataset.photo,galleryImageData:'',galleryImageName:''}:{image:button.dataset.photo,imageData:'',imageName:''})});photoControls(document.getElementById('design-photo-controls'),'design');if(view.selected==='gallery')renderFields();}
-    if(button.dataset.removePhoto) {commit({...draft,...(button.dataset.photoScope==='gallery'?{galleryImageData:'',galleryImageName:''}:{imageData:'',imageName:''})});photoControls(document.getElementById('design-photo-controls'),'design');if(view.selected==='gallery')renderFields();}
+    if(button.dataset.photo) {photoRequests[button.dataset.photoScope]++;commit({...draft,...(button.dataset.photoScope==='gallery'?{galleryImage:button.dataset.photo,galleryImageData:'',galleryImageName:''}:{image:button.dataset.photo,imageData:'',imageName:''})});photoControls(document.getElementById('design-photo-controls'),'design');if(view.selected==='gallery')renderFields();}
+    if(button.dataset.removePhoto) {photoRequests[button.dataset.photoScope]++;commit({...draft,...(button.dataset.photoScope==='gallery'?{galleryImageData:'',galleryImageName:''}:{imageData:'',imageName:''})});photoControls(document.getElementById('design-photo-controls'),'design');if(view.selected==='gallery')renderFields();}
     if(button.dataset.selectSection) {selectSection(button.dataset.selectSection);setPanel('content');}
     if(button.dataset.moveSection) {
       const sections=[...draft.sections],index=sections.indexOf(button.dataset.moveSection),next=index+Number(button.dataset.direction);
@@ -315,9 +408,7 @@
     });
   });
   document.querySelectorAll('button[data-mode]').forEach(button=>button.addEventListener('click',()=>{
-    view.mode=button.dataset.mode;editor.dataset.mode=view.mode;
-    document.querySelectorAll('button[data-mode]').forEach(control=>control.setAttribute('aria-pressed',String(control===button)));
-    document.getElementById('canvas-edit-hint').textContent=view.mode==='edit'?'Click text to edit':'Browse your website';send();fitFrame();
+    setEditorMode(button.dataset.mode);send();fitFrame();
   }));
   document.querySelectorAll('[data-screen]').forEach(button=>button.addEventListener('click',()=>{
     view.screen=button.dataset.screen;document.querySelectorAll('[data-screen]').forEach(control=>control.setAttribute('aria-pressed',String(control===button)));fitFrame();
@@ -340,7 +431,7 @@
     else showSelection({updateUrl:false});
   });
   document.getElementById('undo-draft').addEventListener('click',()=>undo(-1));document.getElementById('redo-draft').addEventListener('click',()=>undo(1));
-  document.getElementById('reset-draft').addEventListener('click',()=>{commit(api.makeDefault(draft.template));renderFields();renderSections();photoControls(document.getElementById('design-photo-controls'),'design');document.getElementById('design-status').textContent='Template reset. Use Undo to restore your changes.';});
+  document.getElementById('reset-draft').addEventListener('click',()=>{photoRequests.hero++;photoRequests.gallery++;commit(api.makeDefault(draft.template));renderFields();renderSections();photoControls(document.getElementById('design-photo-controls'),'design');document.getElementById('design-status').textContent='Template reset. Use Undo to restore your changes.';});
   function toggleExpand() {
     expanded=!expanded;editor.classList.toggle('is-expanded',expanded);
     const button=document.getElementById('expand-preview');button.setAttribute('aria-expanded',String(expanded));button.setAttribute('aria-label',expanded?'Close expanded preview':'Expand website preview');button.textContent=expanded?'×':'↗';
@@ -367,8 +458,8 @@
     if(editorStage.hidden) return;
     if(message.type==='unitech:navigate') setPage(message.page);
     if(message.type==='unitech:escape'&&expanded) toggleExpand();
-    if(message.type==='unitech:select') selectSection(message.section,{fromFrame:true});
-    if(message.type==='unitech:edit'&&Object.hasOwn(api.fields,message.field)&&typeof message.value==='string') {
+    if(message.type==='unitech:select'&&view.mode==='edit') selectSection(message.section,{fromFrame:true});
+    if(message.type==='unitech:edit'&&view.mode==='edit'&&Object.hasOwn(api.fields,message.field)&&typeof message.value==='string') {
       commit({...draft,[message.field]:message.value},{inline:true});
       document.getElementById('preview-address').textContent=`${draft.business} / ${view.page}`;
     }

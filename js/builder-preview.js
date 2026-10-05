@@ -48,7 +48,7 @@
     return result;
   }
   function photoDescription(filename, uploaded) {
-    return uploaded ? `Photograph for ${draft.business}` : ({'interior.jpg':'A bright living room with plants and natural materials','cafe.jpg':'A café counter and freshly prepared coffee','barber.jpg':'A barber at work in a barbershop','barber-detail.jpg':'A close view of a barber trimming a beard'}[filename]);
+    return uploaded ? `Photograph for ${draft.business}` : ({'interior.jpg':'A bright living room with plants and natural materials','cafe.jpg':'A café counter and freshly prepared coffee','barber.jpg':'An abstract arrangement of peach and navy geometric blocks','barber-detail.jpg':'A close view of a barber trimming a beard'}[filename]);
   }
   function photoAlt() {return photoDescription(draft.image,draft.imageData);}
   function header() {
@@ -188,7 +188,7 @@
   function signature() {return JSON.stringify([draft,view.page,view.mode]);}
   function render(resetScroll = false) {
     const nextSignature = signature();
-    if (nextSignature === rendered) {syncSelection();return;}
+    if (nextSignature === rendered) {syncSelection();if(resetScroll)window.scrollTo(0,0);return;}
     const oldScroll = window.scrollY;
     const p = api.palettes[draft.colour];
     document.body.style.setProperty('--paper',p.paper);
